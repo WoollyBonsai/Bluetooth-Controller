@@ -1,0 +1,10 @@
+R_DEF: Internal format may change without notice
+local
+drawable trackpad_background
+id leftClickButton
+id trackpadView
+layout activity_main
+string app_name
+style Theme.BluetoothTrackpad
+xml backup_rules
+xml data_extraction_rules

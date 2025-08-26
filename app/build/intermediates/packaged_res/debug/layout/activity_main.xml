@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  UI Layout for the Bluetooth Trackpad application.
+  - A 'View' acts as the touch-sensitive trackpad area.
+  - A 'Button' below it serves as the left-click button.
+  - The layout uses a vertical LinearLayout to stack these elements.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#121212"
+    tools:context=".MainActivity">
+
+    <!-- This View captures touch events for cursor movement. -->
+    <View
+        android:id="@+id/trackpadView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/trackpad_background" />
+
+    <!-- A simple button to simulate a left mouse click. -->
+    <Button
+        android:id="@+id/leftClickButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Left Click"
+        android:backgroundTint="#333333"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"/>
+
+</LinearLayout>

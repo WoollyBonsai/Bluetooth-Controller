@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.2.0" type="partial_results">
+    <map id="UnsafeIntentLaunch">
+            <map id="unprotected">
+                <entry
+                    name="com.example.bluetoothtrackpad.MainActivity"
+                    boolean="true"/>
+            </map>
+    </map>
+    <map id="UnusedResources">
+        <entry
+            name="model"
+            string="drawable[trackpad_background(U)],id[trackpadView(U),leftClickButton(U)],layout[activity_main(U)],string[app_name(U)],style[Theme_BluetoothTrackpad(U),Theme_AppCompat_DayNight_NoActionBar(R)],xml[data_extraction_rules(U),backup_rules(U)];3^0,5^6;;;"/>
+    </map>
+
+</incidents>

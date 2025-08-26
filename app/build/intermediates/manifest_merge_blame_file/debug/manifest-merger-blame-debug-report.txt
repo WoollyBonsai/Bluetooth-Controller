@@ -1,0 +1,160 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.bluetoothtrackpad"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="28"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- Declare that the app uses Bluetooth hardware -->
+12    <uses-feature
+12-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:6:5-86
+13        android:name="android.hardware.bluetooth"
+13-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:6:19-60
+14        android:required="true" />
+14-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:6:61-84
+15
+16    <!--
+17      Permissions required for Bluetooth functionality.
+18      - BLUETOOTH_CONNECT: Needed to connect to paired devices and use HID profile. (For Android 12+)
+19      - BLUETOOTH_ADVERTISE: Needed to make the device discoverable. (For Android 12+)
+20      - BLUETOOTH and BLUETOOTH_ADMIN: Required for older Android versions.
+21    -->
+22    <uses-permission
+22-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:14:5-95
+23        android:name="android.permission.BLUETOOTH"
+23-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:14:22-65
+24        android:maxSdkVersion="30" />
+24-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:14:66-92
+25    <uses-permission
+25-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:15:5-101
+26        android:name="android.permission.BLUETOOTH_ADMIN"
+26-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:15:22-71
+27        android:maxSdkVersion="30" />
+27-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:15:72-98
+28
+29    <!-- For Android 12 (API 31) and above -->
+30    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+30-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:18:5-76
+30-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:18:22-73
+31    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+31-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:19:5-78
+31-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:19:22-75
+32
+33    <permission
+33-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+34        android:name="com.example.bluetoothtrackpad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+34-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+35        android:protectionLevel="signature" />
+35-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+36
+37    <uses-permission android:name="com.example.bluetoothtrackpad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+37-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+37-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+38
+39    <application
+39-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:22:5-39:19
+40        android:allowBackup="true"
+40-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:23:9-35
+41        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+41-->[androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+42        android:dataExtractionRules="@xml/data_extraction_rules"
+42-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:24:9-65
+43        android:debuggable="true"
+44        android:extractNativeLibs="false"
+45        android:fullBackupContent="@xml/backup_rules"
+45-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:25:9-54
+46        android:label="@string/app_name"
+46-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:26:9-41
+47        android:supportsRtl="true"
+47-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:27:9-35
+48        android:theme="@style/Theme.BluetoothTrackpad" >
+48-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:28:9-55
+49        <activity
+49-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:30:9-38:20
+50            android:name="com.example.bluetoothtrackpad.MainActivity"
+50-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:31:13-41
+51            android:exported="true" >
+51-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:32:13-36
+52            <intent-filter>
+52-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:33:13-37:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:34:17-69
+53-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:34:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:36:17-77
+55-->/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/AndroidManifest.xml:36:27-74
+56            </intent-filter>
+57        </activity>
+58
+59        <provider
+59-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+60            android:name="androidx.startup.InitializationProvider"
+60-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:25:13-67
+61            android:authorities="com.example.bluetoothtrackpad.androidx-startup"
+61-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:26:13-68
+62            android:exported="false" >
+62-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:27:13-37
+63            <meta-data
+63-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+64                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+64-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:30:17-75
+65                android:value="androidx.startup" />
+65-->[androidx.emoji2:emoji2:1.3.0] /home/woolly/.gradle/caches/transforms-3/9c6178fb52f18d329b1a2626e16811c4/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:31:17-49
+66            <meta-data
+66-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/woolly/.gradle/caches/transforms-3/000c20a0e2b23be2e61b332703dbee42/transformed/jetified-lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+67                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+67-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/woolly/.gradle/caches/transforms-3/000c20a0e2b23be2e61b332703dbee42/transformed/jetified-lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+68                android:value="androidx.startup" />
+68-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/woolly/.gradle/caches/transforms-3/000c20a0e2b23be2e61b332703dbee42/transformed/jetified-lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+69            <meta-data
+69-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+70                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+70-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+71                android:value="androidx.startup" />
+71-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+72        </provider>
+73
+74        <receiver
+74-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+75            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+75-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+76            android:directBootAware="false"
+76-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+77            android:enabled="true"
+77-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+78            android:exported="true"
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+79            android:permission="android.permission.DUMP" >
+79-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+80            <intent-filter>
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+81                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+82            </intent-filter>
+83            <intent-filter>
+83-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+84                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+84-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+84-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+85            </intent-filter>
+86            <intent-filter>
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+87                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+88            </intent-filter>
+89            <intent-filter>
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+90                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/woolly/.gradle/caches/transforms-3/ee00d4ebac01e8837c978d1cc839d72c/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+91            </intent-filter>
+92        </receiver>
+93    </application>
+94
+95</manifest>

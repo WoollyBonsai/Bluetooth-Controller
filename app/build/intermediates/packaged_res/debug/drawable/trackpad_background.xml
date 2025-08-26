@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Drawable resource for the trackpad background.
+  - Defines a rectangle with rounded corners and a solid fill color.
+  - This provides a visually distinct area for the trackpad.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#2C2C2C" />
+    <corners android:radius="12dp" />
+</shape>
