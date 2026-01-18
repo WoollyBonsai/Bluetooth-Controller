@@ -101,9 +101,11 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (state == BluetoothProfile.STATE_CONNECTED) {
                         hostDevice = device
+                        hidDevice = hidManager.getHidDevice()
                         btnOpenTrackpad.visibility = View.VISIBLE
                     } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
                         hostDevice = null
+                        hidDevice = null
                         btnOpenTrackpad.visibility = View.GONE
                     }
                 }

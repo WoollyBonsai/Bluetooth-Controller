@@ -40,6 +40,10 @@ class HidManager(val context: Context) {
         context.startActivity(intent)
     }
 
+    fun getHidDevice(): BluetoothHidDevice? {
+        return hidDevice
+    }
+
     private val baseHidCallback = object : BluetoothHidDevice.Callback() {
         override fun onConnectionStateChanged(device: BluetoothDevice?, state: Int) {
             if (state == BluetoothProfile.STATE_CONNECTED) {
