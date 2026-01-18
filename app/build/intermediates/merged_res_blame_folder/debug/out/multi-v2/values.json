@@ -4,6 +4,23 @@
             "outputFile": "com.example.bluetoothtrackpad.app-mergeDebugResources-29:/values/values.xml",
             "map": [
                 {
+                    "source": "/home/woolly/Work/Bluetooth-Controller/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "16",
+                        "endColumns": "55",
+                        "endOffsets": "67"
+                    },
+                    "to": {
+                        "startLines": "1977",
+                        "startColumns": "4",
+                        "startOffsets": "130959",
+                        "endColumns": "55",
+                        "endOffsets": "131010"
+                    }
+                },
+                {
                     "source": "/home/woolly/.gradle/caches/transforms-3/9edabc8f42025011ae47eac4fec80b9b/transformed/constraintlayout-2.1.4/res/values/values.xml",
                     "from": {
                         "startLines": "2,9,10,15,16,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,42,43,44,45,55,63,64,65,70,71,76,81,82,83,88,89,94,95,100,101,102,108,109,110,115,121,122,123,124,130,131,132,133,136,139,142,143,146,149,150,151,152,153,156,159,160,161,162,168,173,176,179,180,181,186,187,188,191,194,195,198,201,204,207,208,209,212,215,216,221,222,228,233,236,239,240,241,242,243,244,245,246,247,248,249,250,266,272,273,274,275,276,283,289,290,291,294,299,300,308,309,310,311,312,313,314,315,324,325,326,332,333,339,343,344,345,346,347,356,360,361,380,566,694,700,704,874,1026,1039,1055,1080,1103,1106,1109,1112,1141,1168,1185,1271,1279,1292,1308,1312,1342,1355,1359,1369,1379,1423,1436,1440,1443,1459,1500,1535,1542,1559",
@@ -80,23 +97,6 @@
                     }
                 },
                 {
-                    "source": "/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/res/values/strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "16",
-                        "endColumns": "55",
-                        "endOffsets": "67"
-                    },
-                    "to": {
-                        "startLines": "1977",
-                        "startColumns": "4",
-                        "startOffsets": "130959",
-                        "endColumns": "55",
-                        "endOffsets": "131010"
-                    }
-                },
-                {
                     "source": "/home/woolly/.gradle/caches/transforms-3/d78847706522ff0eb7dc3f2d2c91fdac/transformed/lifecycle-viewmodel-2.6.2/res/values/values.xml",
                     "from": {
                         "startLines": "2",
@@ -147,6 +147,25 @@
                         "endLines": "138,141,1052,11328",
                         "endColumns": "55,47,51,24",
                         "endOffsets": "7047,7203,62767,719054"
+                    }
+                },
+                {
+                    "source": "/home/woolly/Work/Bluetooth-Controller/app/src/main/res/values/themes.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "2",
+                        "startOffsets": "96",
+                        "endLines": "4",
+                        "endColumns": "10",
+                        "endOffsets": "231"
+                    },
+                    "to": {
+                        "startLines": "6369",
+                        "startColumns": "4",
+                        "startOffsets": "446185",
+                        "endLines": "6371",
+                        "endColumns": "10",
+                        "endOffsets": "446285"
                     }
                 },
                 {
@@ -242,25 +261,6 @@
                         "endLines": "506,1103,1104,1105,1113,1114,1115,1807,12698",
                         "endColumns": "55,58,47,55,74,75,71,65,24",
                         "endOffsets": "25672,66099,66147,66203,66889,66965,67037,120594,769246"
-                    }
-                },
-                {
-                    "source": "/home/woolly/Desktop/android-sdk/BluetoothTrackpad/app/src/main/res/values/themes.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "2",
-                        "startOffsets": "96",
-                        "endLines": "4",
-                        "endColumns": "10",
-                        "endOffsets": "231"
-                    },
-                    "to": {
-                        "startLines": "6369",
-                        "startColumns": "4",
-                        "startOffsets": "446185",
-                        "endLines": "6371",
-                        "endColumns": "10",
-                        "endOffsets": "446285"
                     }
                 },
                 {

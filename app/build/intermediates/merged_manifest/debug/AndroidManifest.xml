@@ -48,7 +48,9 @@
         android:theme="@style/Theme.BluetoothTrackpad" >
         <activity
             android:name="com.example.bluetoothtrackpad.MainActivity"
-            android:exported="true" >
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

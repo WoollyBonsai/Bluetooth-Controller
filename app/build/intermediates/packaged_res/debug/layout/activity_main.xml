@@ -1,36 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  UI Layout for the Bluetooth Trackpad application.
-  - A 'View' acts as the touch-sensitive trackpad area.
-  - A 'Button' below it serves as the left-click button.
-  - The layout uses a vertical LinearLayout to stack these elements.
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#121212"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
-    <!-- This View captures touch events for cursor movement. -->
-    <View
-        android:id="@+id/trackpadView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/trackpad_background" />
-
-    <!-- A simple button to simulate a left mouse click. -->
-    <Button
-        android:id="@+id/leftClickButton"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/setupLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Left Click"
-        android:backgroundTint="#333333"
-        android:textColor="#FFFFFF"
-        android:padding="12dp"/>
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnInit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1. Make Discoverable" />
+
+        <Button
+            android:id="@+id/btnOpenTrackpad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2. Open Trackpad"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/trackpadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
+
+        <View
+            android:id="@+id/touchArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#222" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
