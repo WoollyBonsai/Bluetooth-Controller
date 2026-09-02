@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
@@ -47,16 +48,29 @@ class MainActivity : AppCompatActivity() {
 
     // Trackpad 2 (Mode 2)
     private lateinit var touchArea2: View
+    private lateinit var btnLeftClick2: Button
+    private lateinit var btnMiddleClick2: Button
+    private lateinit var btnRightClick2: Button
+    
     private lateinit var etImmediateSend: EditText
     private lateinit var etStringSend: EditText
     private lateinit var btnSendString: Button
     private lateinit var btnClipboard: Button
     private lateinit var btnSpecialKeys: Button
 
+    // Trackpad State
     private var lastX = 0f
     private var lastY = 0f
     private var lastScrollY = 0f
     private var currentButtonsState: Byte = 0
+    
+    // Gestures State
+    private var downTime = 0L
+    private var isDragging = false
+    private var hasMoved = false
+    private var twoFingerTap = false
+    private var twoFingerTapTime = 0L
+    private val TAP_TIMEOUT = 250L
 
     private var hostDevice: BluetoothDevice? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -75,7 +89,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Note: Removed fixed screen orientation so it can freely rotate to portrait/landscape
         setContentView(R.layout.activity_main)
 
         btnInit = findViewById(R.id.btnInit)
@@ -111,6 +124,10 @@ class MainActivity : AppCompatActivity() {
 
         // Mode 2 UI
         touchArea2 = findViewById(R.id.touchArea2)
+        btnLeftClick2 = findViewById(R.id.btnLeftClick2)
+        btnMiddleClick2 = findViewById(R.id.btnMiddleClick2)
+        btnRightClick2 = findViewById(R.id.btnRightClick2)
+        
         etImmediateSend = findViewById(R.id.etImmediateSend)
         etStringSend = findViewById(R.id.etStringSend)
         btnSendString = findViewById(R.id.btnSendString)
@@ -156,9 +173,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         val buttonTouchListener = View.OnTouchListener { v, event ->
             val buttonMask = when (v.id) {
-                R.id.btnLeftClick1 -> 1.toByte()
-                R.id.btnRightClick1 -> 2.toByte()
-                R.id.btnMiddleClick1 -> 4.toByte()
+                R.id.btnLeftClick1, R.id.btnLeftClick2 -> 1.toByte()
+                R.id.btnRightClick1, R.id.btnRightClick2 -> 2.toByte()
+                R.id.btnMiddleClick1, R.id.btnMiddleClick2 -> 4.toByte()
                 else -> 0.toByte()
             }
 
@@ -180,18 +197,44 @@ class MainActivity : AppCompatActivity() {
         btnLeftClick1.setOnTouchListener(buttonTouchListener)
         btnRightClick1.setOnTouchListener(buttonTouchListener)
         btnMiddleClick1.setOnTouchListener(buttonTouchListener)
+        
+        btnLeftClick2.setOnTouchListener(buttonTouchListener)
+        btnRightClick2.setOnTouchListener(buttonTouchListener)
+        btnMiddleClick2.setOnTouchListener(buttonTouchListener)
     }
 
     private fun setupKeyboardInputs() {
+        // Catch hardware/software backspace presses
+        etImmediateSend.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                sendKeyboardReport(0, 0x2A) // Backspace HID
+                Thread {
+                    Thread.sleep(10)
+                    sendKeyboardReport(0, 0)
+                }.start()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
+        var isClearing = false
         etImmediateSend.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isClearing) return
                 if (count > 0 && s != null) {
                     val char = s[start + count - 1]
                     sendChar(char)
                 }
             }
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isClearing) return
+                if (s != null && s.isNotEmpty()) {
+                    isClearing = true
+                    s.clear()
+                    isClearing = false
+                }
+            }
         })
 
         btnSendString.setOnClickListener {
@@ -287,10 +330,19 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed(broadcastTimeoutRunnable!!, 60000)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupTrackpad(view: View) {
         view.setOnTouchListener { _, event ->
             handleTrackpadTouch(event)
             true
+        }
+    }
+
+    private val longPressRunnable = Runnable {
+        if (!hasMoved) {
+            isDragging = true
+            currentButtonsState = (currentButtonsState.toInt() or 1).toByte()
+            sendMouseReport(0, 0, 0)
         }
     }
 
@@ -300,10 +352,19 @@ class MainActivity : AppCompatActivity() {
             MotionEvent.ACTION_DOWN -> {
                 lastX = event.x
                 lastY = event.y
+                downTime = System.currentTimeMillis()
+                hasMoved = false
+                twoFingerTap = false
+                
+                // If held for 300ms without moving, trigger drag (left click hold)
+                handler.postDelayed(longPressRunnable, 300)
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
                 if (pointerCount == 2) {
                     lastScrollY = event.getY(0) / 2 + event.getY(1) / 2
+                    twoFingerTap = true
+                    twoFingerTapTime = System.currentTimeMillis()
+                    handler.removeCallbacks(longPressRunnable)
                 }
             }
             MotionEvent.ACTION_MOVE -> {
@@ -312,6 +373,10 @@ class MainActivity : AppCompatActivity() {
                     val dy = (event.y - lastY).toInt()
 
                     if (dx != 0 || dy != 0) {
+                        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                            hasMoved = true
+                            handler.removeCallbacks(longPressRunnable)
+                        }
                         sendMouseReport(dx, dy, 0)
                     }
                     lastX = event.x
@@ -322,29 +387,53 @@ class MainActivity : AppCompatActivity() {
                     
                     val scrollSensitivity = 10 
                     if (Math.abs(rawDy) > scrollSensitivity) {
+                        twoFingerTap = false // canceled tap
                         val wheel = -rawDy / scrollSensitivity
                         sendMouseReport(0, 0, wheel)
                         lastScrollY = currentScrollY
                     }
                 }
             }
+            MotionEvent.ACTION_POINTER_UP -> {
+                if (pointerCount == 2 && twoFingerTap) {
+                    if (System.currentTimeMillis() - twoFingerTapTime < TAP_TIMEOUT) {
+                        // Right click trigger
+                        sendMouseReport(0, 0, 0, 2.toByte())
+                        handler.postDelayed({ sendMouseReport(0, 0, 0, 0.toByte()) }, 50)
+                    }
+                }
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                handler.removeCallbacks(longPressRunnable)
+                val upTime = System.currentTimeMillis()
+                
+                if (isDragging) {
+                    isDragging = false
+                    currentButtonsState = (currentButtonsState.toInt() and 1.inv()).toByte()
+                    sendMouseReport(0, 0, 0)
+                } else if (!hasMoved && pointerCount == 1 && (upTime - downTime) < TAP_TIMEOUT) {
+                    // Single tap -> Left click
+                    sendMouseReport(0, 0, 0, 1.toByte())
+                    handler.postDelayed({ sendMouseReport(0, 0, 0, 0.toByte()) }, 50)
+                }
+            }
         }
     }
 
-    private fun sendMouseReport(dx: Int, dy: Int, wheel: Int) {
+    private fun sendMouseReport(dx: Int, dy: Int, wheel: Int, buttonOverride: Byte? = null) {
         if (hostDevice == null) return
         val clampedDx = dx.coerceIn(-127, 127).toByte()
         val clampedDy = dy.coerceIn(-127, 127).toByte()
         val clampedWheel = wheel.coerceIn(-127, 127).toByte()
         
-        val reportData = byteArrayOf(currentButtonsState, clampedDx, clampedDy, clampedWheel)
+        val buttons = buttonOverride ?: currentButtonsState
+        val reportData = byteArrayOf(buttons, clampedDx, clampedDy, clampedWheel)
         
         reportExecutor.execute {
             hidDevice?.sendReport(hostDevice, HidUtils.MOUSE_REPORT_ID.toInt(), reportData)
         }
     }
 
-    // Placeholders for keyboard and media reports
     private fun sendKeyboardReport(modifier: Byte, keycode: Byte) {
         if (hostDevice == null) return
         val reportData = byteArrayOf(modifier, 0, keycode, 0, 0, 0, 0, 0)
@@ -355,7 +444,6 @@ class MainActivity : AppCompatActivity() {
     
     private fun sendConsumerReport(mediaKey: Int) {
         if (hostDevice == null) return
-        // Consumer report is 16 bits (2 bytes)
         val reportData = byteArrayOf((mediaKey and 0xFF).toByte(), ((mediaKey shr 8) and 0xFF).toByte())
         reportExecutor.execute {
             hidDevice?.sendReport(hostDevice, HidUtils.CONSUMER_REPORT_ID.toInt(), reportData)
