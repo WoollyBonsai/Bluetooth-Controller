@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     
     // Top Bar
     private lateinit var btnInit: Button
+    private lateinit var btnConnect: Button
     private lateinit var tvStatus: TextView
     private lateinit var spinnerMode: Spinner
 
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btnInit = findViewById(R.id.btnInit)
+        btnConnect = findViewById(R.id.btnConnect)
         tvStatus = findViewById(R.id.tvStatus)
         spinnerMode = findViewById(R.id.spinnerMode)
 
@@ -146,7 +148,6 @@ class MainActivity : AppCompatActivity() {
                         broadcastTimeoutRunnable?.let { handler.removeCallbacks(it) }
                     } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
                         hostDevice = null
-                        hidDevice = null
                         tvStatus.text = "Disconnected"
                     }
                 }
@@ -157,10 +158,54 @@ class MainActivity : AppCompatActivity() {
             checkPermissionsAndInit()
         }
 
+        btnConnect.setOnClickListener {
+            showPairedDevicesDialog()
+        }
+
         setupTrackpad(touchArea1)
         setupTrackpad(touchArea2)
         setupButtons()
         setupKeyboardInputs()
+    }
+
+    private fun showPairedDevicesDialog() {
+        val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Bluetooth permission required", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val bondedDevices = bluetoothAdapter.bondedDevices?.toList() ?: emptyList()
+        if (bondedDevices.isEmpty()) {
+            Toast.makeText(this, "No paired devices found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val deviceNames = bondedDevices.map { it.name ?: it.address }.toTypedArray()
+        
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Connect to Paired PC")
+            .setItems(deviceNames) { _, which ->
+                val device = bondedDevices[which]
+                val currentHid = hidDevice ?: hidManager.getHidDevice()
+                if (currentHid != null) {
+                    try {
+                        tvStatus.text = "Connecting..."
+                        currentHid.connect(device)
+                    } catch (e: Exception) {
+                        Toast.makeText(this, "Failed to connect: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "HID Profile not ready. Broadcast first.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun switchLayout(index: Int) {
