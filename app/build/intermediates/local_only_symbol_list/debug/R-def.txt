@@ -1,12 +1,31 @@
 R_DEF: Internal format may change without notice
 local
+array mode_array
 drawable trackpad_background
-id btnBack
+id btnClipboard
+id btnConnect
 id btnInit
-id btnOpenTrackpad
-id setupLayout
-id touchArea
-id trackpadLayout
+id btnLeftClick1
+id btnLeftClick2
+id btnMiddleClick1
+id btnMiddleClick2
+id btnRightClick1
+id btnRightClick2
+id btnSendString
+id btnSpecialKeys
+id contentContainer
+id etImmediateSend
+id etStringSend
+id layoutMultimedia
+id layoutPresentation
+id layoutThinkpad
+id layoutTrackpadKeyboard
+id layoutTrackpadOnly
+id spinnerMode
+id topBar
+id touchArea1
+id touchArea2
+id tvStatus
 layout activity_main
 string app_name
 style Theme.BluetoothTrackpad

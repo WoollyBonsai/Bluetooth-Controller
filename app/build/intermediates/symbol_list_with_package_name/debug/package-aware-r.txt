@@ -77,6 +77,7 @@ animator mtrl_fab_hide_motion_spec
 animator mtrl_fab_show_motion_spec
 animator mtrl_fab_transformation_sheet_collapse_spec
 animator mtrl_fab_transformation_sheet_expand_spec
+array mode_array
 attr SharedValue
 attr SharedValueId
 attr actionBarDivider
@@ -3191,9 +3192,17 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
-id btnBack
+id btnClipboard
+id btnConnect
 id btnInit
-id btnOpenTrackpad
+id btnLeftClick1
+id btnLeftClick2
+id btnMiddleClick1
+id btnMiddleClick2
+id btnRightClick1
+id btnRightClick2
+id btnSendString
+id btnSpecialKeys
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -3222,6 +3231,7 @@ id confirm_button
 id constraint
 id container
 id content
+id contentContainer
 id contentPanel
 id contiguous
 id continuousVelocity
@@ -3276,6 +3286,8 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id etImmediateSend
+id etStringSend
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3329,6 +3341,11 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutMultimedia
+id layoutPresentation
+id layoutThinkpad
+id layoutTrackpadKeyboard
+id layoutTrackpadOnly
 id left
 id leftToRight
 id legacy
@@ -3486,7 +3503,6 @@ id search_voice_btn
 id select_dialog_listview
 id selected
 id selection_type
-id setupLayout
 id sharedValueSet
 id sharedValueUnset
 id shortcut
@@ -3504,6 +3520,7 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
+id spinnerMode
 id spline
 id split_action_bar
 id spread
@@ -3561,10 +3578,11 @@ id titleDividerNoCustom
 id title_template
 id toggle
 id top
+id topBar
 id topPanel
-id touchArea
+id touchArea1
+id touchArea2
 id touch_outside
-id trackpadLayout
 id transitionToEnd
 id transitionToStart
 id transition_clip
@@ -3576,6 +3594,7 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvStatus
 id unchecked
 id uniform
 id unlabeled

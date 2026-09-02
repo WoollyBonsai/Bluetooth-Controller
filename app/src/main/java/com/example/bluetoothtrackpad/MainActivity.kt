@@ -53,6 +53,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnMiddleClick2: Button
     private lateinit var btnRightClick2: Button
     
+    // Thinkpad (Mode 3)
+    private lateinit var etThinkpadInput: EditText
+    private lateinit var btnTrackPoint: View
+    private lateinit var btnLeftClick3: Button
+    private lateinit var btnMiddleClick3: Button
+    private lateinit var btnRightClick3: Button
+    
     private lateinit var etImmediateSend: EditText
     private lateinit var etStringSend: EditText
     private lateinit var btnSendString: Button
@@ -130,6 +137,13 @@ class MainActivity : AppCompatActivity() {
         btnMiddleClick2 = findViewById(R.id.btnMiddleClick2)
         btnRightClick2 = findViewById(R.id.btnRightClick2)
         
+        // Mode 3 UI
+        etThinkpadInput = findViewById(R.id.etThinkpadInput)
+        btnTrackPoint = findViewById(R.id.btnTrackPoint)
+        btnLeftClick3 = findViewById(R.id.btnLeftClick3)
+        btnMiddleClick3 = findViewById(R.id.btnMiddleClick3)
+        btnRightClick3 = findViewById(R.id.btnRightClick3)
+        
         etImmediateSend = findViewById(R.id.etImmediateSend)
         etStringSend = findViewById(R.id.etStringSend)
         btnSendString = findViewById(R.id.btnSendString)
@@ -164,8 +178,11 @@ class MainActivity : AppCompatActivity() {
 
         setupTrackpad(touchArea1)
         setupTrackpad(touchArea2)
+        setupTrackPoint()
         setupButtons()
         setupKeyboardInputs()
+        setupImmediateInput(etImmediateSend)
+        setupImmediateInput(etThinkpadInput)
     }
 
     private fun showPairedDevicesDialog() {
@@ -218,9 +235,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         val buttonTouchListener = View.OnTouchListener { v, event ->
             val buttonMask = when (v.id) {
-                R.id.btnLeftClick1, R.id.btnLeftClick2 -> 1.toByte()
-                R.id.btnRightClick1, R.id.btnRightClick2 -> 2.toByte()
-                R.id.btnMiddleClick1, R.id.btnMiddleClick2 -> 4.toByte()
+                R.id.btnLeftClick1, R.id.btnLeftClick2, R.id.btnLeftClick3 -> 1.toByte()
+                R.id.btnRightClick1, R.id.btnRightClick2, R.id.btnRightClick3 -> 2.toByte()
+                R.id.btnMiddleClick1, R.id.btnMiddleClick2, R.id.btnMiddleClick3 -> 4.toByte()
                 else -> 0.toByte()
             }
 
@@ -246,11 +263,14 @@ class MainActivity : AppCompatActivity() {
         btnLeftClick2.setOnTouchListener(buttonTouchListener)
         btnRightClick2.setOnTouchListener(buttonTouchListener)
         btnMiddleClick2.setOnTouchListener(buttonTouchListener)
+
+        btnLeftClick3.setOnTouchListener(buttonTouchListener)
+        btnRightClick3.setOnTouchListener(buttonTouchListener)
+        btnMiddleClick3.setOnTouchListener(buttonTouchListener)
     }
 
-    private fun setupKeyboardInputs() {
-        // Catch hardware/software backspace presses
-        etImmediateSend.setOnKeyListener { _, keyCode, event ->
+    private fun setupImmediateInput(editText: EditText) {
+        editText.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
                 sendKeyboardReport(0, 0x2A) // Backspace HID
                 Thread {
@@ -263,7 +283,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         var isClearing = false
-        etImmediateSend.addTextChangedListener(object : TextWatcher {
+        editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isClearing) return
@@ -281,7 +301,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
+    private fun setupKeyboardInputs() {
         btnSendString.setOnClickListener {
             val text = etStringSend.text.toString()
             if (text.isNotEmpty()) {
@@ -379,6 +401,85 @@ class MainActivity : AppCompatActivity() {
     private fun setupTrackpad(view: View) {
         view.setOnTouchListener { _, event ->
             handleTrackpadTouch(event)
+            true
+        }
+    }
+
+    private var tpLastX = 0f
+    private var tpLastY = 0f
+    private var isJoysticking = false
+    private var tpDownTime = 0L
+    private var tpMoved = false
+    private var tpTapCount = 0
+    private var tpTapRunnable: Runnable? = null
+    private val TP_DOUBLE_TAP_TIMEOUT = 250L
+
+    private val joystickRunnable = object : Runnable {
+        override fun run() {
+            if (isJoysticking) {
+                val centerX = btnTrackPoint.width / 2f
+                val centerY = btnTrackPoint.height / 2f
+                
+                val dx = (tpLastX - centerX) / 3f
+                val dy = (tpLastY - centerY) / 3f
+                
+                if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                    sendMouseReport(dx.toInt(), dy.toInt(), 0)
+                }
+                
+                handler.postDelayed(this, 30) // ~33fps
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupTrackPoint() {
+        btnTrackPoint.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    isJoysticking = true
+                    tpLastX = event.x
+                    tpLastY = event.y
+                    tpDownTime = System.currentTimeMillis()
+                    tpMoved = false
+                    handler.post(joystickRunnable)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    tpLastX = event.x
+                    tpLastY = event.y
+                    if (Math.abs(event.x - btnTrackPoint.width / 2f) > 15 || Math.abs(event.y - btnTrackPoint.height / 2f) > 15) {
+                        tpMoved = true
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    isJoysticking = false
+                    handler.removeCallbacks(joystickRunnable)
+                    
+                    val upTime = System.currentTimeMillis()
+                    if (!tpMoved && (upTime - tpDownTime) < TP_DOUBLE_TAP_TIMEOUT) {
+                        tpTapCount++
+                        if (tpTapCount == 1) {
+                            tpTapRunnable = Runnable {
+                                if (tpTapCount == 1) {
+                                    // Single tap
+                                    sendMouseReport(0, 0, 0, 1)
+                                    handler.postDelayed({ sendMouseReport(0, 0, 0, 0) }, 30)
+                                }
+                                tpTapCount = 0
+                            }
+                            handler.postDelayed(tpTapRunnable!!, TP_DOUBLE_TAP_TIMEOUT)
+                        } else if (tpTapCount == 2) {
+                            // Double tap
+                            tpTapRunnable?.let { handler.removeCallbacks(it) }
+                            sendMouseReport(0, 0, 0, 2)
+                            handler.postDelayed({ sendMouseReport(0, 0, 0, 0) }, 30)
+                            tpTapCount = 0
+                        }
+                    } else {
+                        tpTapCount = 0 // Reset if moved
+                    }
+                }
+            }
             true
         }
     }
