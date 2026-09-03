@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-42:12
-INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-42:12
-INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-42:12
-INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-42:12
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-44:12
+INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-44:12
+INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-44:12
+INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:2:1-44:12
 MERGED from [com.google.android.material:material:1.12.0] /home/woolly/.gradle/caches/transforms-3/f31494d7e4d2149c02e71a50abb75bc6/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/woolly/.gradle/caches/transforms-3/9edabc8f42025011ae47eac4fec80b9b/transformed/constraintlayout-2.1.4/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/woolly/.gradle/caches/transforms-3/c62d2ca61124089604c9bed477a14117/transformed/jetified-appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
@@ -82,8 +82,8 @@ ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.x
 	android:name
 		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:19:22-75
 application
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:22:5-40:19
-INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:22:5-40:19
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:22:5-42:19
+INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:22:5-42:19
 MERGED from [com.google.android.material:material:1.12.0] /home/woolly/.gradle/caches/transforms-3/f31494d7e4d2149c02e71a50abb75bc6/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /home/woolly/.gradle/caches/transforms-3/f31494d7e4d2149c02e71a50abb75bc6/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/woolly/.gradle/caches/transforms-3/9edabc8f42025011ae47eac4fec80b9b/transformed/constraintlayout-2.1.4/AndroidManifest.xml:9:5-20
@@ -118,24 +118,40 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/woolly/.gradle/caches
 		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:28:9-55
 	android:dataExtractionRules
 		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:24:9-65
-activity#com.example.bluetoothtrackpad.MainActivity
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:30:9-39:20
+activity#com.example.bluetoothtrackpad.SettingsActivity
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:30:9-78
 	android:exported
-		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:33:13-36
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:30:52-75
+	android:name
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:30:19-51
+activity#com.example.bluetoothtrackpad.LayoutEditorActivity
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:9-172
+	android:screenOrientation
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:132-169
+	android:exported
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:56-80
+	android:theme
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:81-131
+	android:name
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:19-55
+activity#com.example.bluetoothtrackpad.MainActivity
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:32:9-41:20
+	android:exported
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:35:13-36
 	android:configChanges
-		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:32:13-74
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:34:13-74
 	android:name
-		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:31:13-41
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:33:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:34:13-38:29
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:36:13-40:29
 action#android.intent.action.MAIN
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:35:17-69
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:37:17-69
 	android:name
-		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:35:25-66
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:37:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:37:17-77
+ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:39:17-77
 	android:name
-		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:37:27-74
+		ADDED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml:39:27-74
 uses-sdk
 INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/woolly/Work/Bluetooth-Controller/app/src/main/AndroidManifest.xml

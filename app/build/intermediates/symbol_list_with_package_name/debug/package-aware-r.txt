@@ -3198,6 +3198,7 @@ id btnBrightUp
 id btnClipboard
 id btnConnect
 id btnDisplayMode
+id btnEditLayout
 id btnEsc
 id btnF5
 id btnInit
@@ -3214,6 +3215,7 @@ id btnPrevTrack
 id btnRightClick1
 id btnRightClick2
 id btnSendString
+id btnSettings
 id btnSpecialKeys
 id btnVolDown
 id btnVolUp
@@ -3515,6 +3517,7 @@ id search_mag_icon
 id search_plate
 id search_src_text
 id search_voice_btn
+id seekSensitivity
 id select_dialog_listview
 id selected
 id selection_type
@@ -3557,6 +3560,7 @@ id stretch
 id submenuarrow
 id submit_area
 id supportScrollUp
+id switchGyro
 id tabMode
 id tag_accessibility_actions
 id tag_accessibility_clickable_spans
@@ -3750,6 +3754,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_main
+layout activity_settings
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog

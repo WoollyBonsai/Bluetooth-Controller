@@ -47,6 +47,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BluetoothTrackpad" >
         <activity
+            android:name="com.example.bluetoothtrackpad.SettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.bluetoothtrackpad.LayoutEditorActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name="com.example.bluetoothtrackpad.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true" >

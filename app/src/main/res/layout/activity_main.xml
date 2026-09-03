@@ -35,6 +35,13 @@
             android:text="Disconnected"
             android:layout_weight="1" />
 
+            <Button
+                android:id="@+id/btnSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#666"/>
         <Spinner
             android:id="@+id/spinnerMode"
             android:layout_width="wrap_content"

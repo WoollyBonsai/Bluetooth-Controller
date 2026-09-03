@@ -8,6 +8,7 @@ id btnBrightUp
 id btnClipboard
 id btnConnect
 id btnDisplayMode
+id btnEditLayout
 id btnEsc
 id btnF5
 id btnInit
@@ -24,6 +25,7 @@ id btnPrevTrack
 id btnRightClick1
 id btnRightClick2
 id btnSendString
+id btnSettings
 id btnSpecialKeys
 id btnVolDown
 id btnVolUp
@@ -36,7 +38,9 @@ id layoutPresentation
 id layoutThinkpad
 id layoutTrackpadKeyboard
 id layoutTrackpadOnly
+id seekSensitivity
 id spinnerMode
+id switchGyro
 id topBar
 id touchArea1
 id touchArea2
@@ -44,6 +48,7 @@ id touchArea3
 id touchAreaPresentation
 id tvStatus
 layout activity_main
+layout activity_settings
 string app_name
 style Theme.BluetoothTrackpad
 xml backup_rules

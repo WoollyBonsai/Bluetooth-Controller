@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#1a1a1a">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Global Settings"
+        android:textColor="#FFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Gyro Toggle -->
+    <Switch
+        android:id="@+id/switchGyro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable Gyroscope Mouse"
+        android:textColor="#FFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp" />
+        
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mouse Sensitivity"
+        android:textColor="#CCC"
+        android:layout_marginBottom="8dp"/>
+        
+    <SeekBar
+        android:id="@+id/seekSensitivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Custom Layouts"
+        android:textColor="#FFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnEditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create / Edit Custom Layouts"
+        android:backgroundTint="#4CAF50"/>
+        
+</LinearLayout>

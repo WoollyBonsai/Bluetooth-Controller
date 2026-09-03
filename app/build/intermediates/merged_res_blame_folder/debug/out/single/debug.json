@@ -22,5 +22,9 @@
     {
         "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpad_background.xml.flat",
         "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/drawable/trackpad_background.xml"
+    },
+    {
+        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_settings.xml.flat",
+        "source": "com.example.bluetoothtrackpad.app-main-33:/layout/activity_settings.xml"
     }
 ]
