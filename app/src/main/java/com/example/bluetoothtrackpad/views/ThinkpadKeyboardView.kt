@@ -171,11 +171,18 @@ class ThinkpadKeyboardView @JvmOverloads constructor(
                 }
             }
             trackPointRect.setEmpty()
-            leftBtnRect.setEmpty()
-            midBtnRect.setEmpty()
-            rightBtnRect.setEmpty()
+            
+            // Portrait mouse buttons just above the keyboard
+            val mouseBtnHeight = height * 0.08f // 8% of screen height
+            val mouseBtnY = startY - mouseBtnHeight
+            val btnWidth = width / 3f
+            leftBtnRect = RectF(0f, mouseBtnY, btnWidth, startY)
+            midBtnRect = RectF(btnWidth, mouseBtnY, btnWidth * 2, startY)
+            rightBtnRect = RectF(btnWidth * 2, mouseBtnY, width.toFloat(), startY)
+            
         } else {
-            val rowHeight = (height * 0.8f) / landscapeRows.size
+            val mouseBtnHeight = height * 0.15f
+            val rowHeight = (height - mouseBtnHeight) / landscapeRows.size
             maxScrollX = 0f
             currentScrollX = 0f
             
@@ -186,17 +193,17 @@ class ThinkpadKeyboardView @JvmOverloads constructor(
                 
                 for (key in row) {
                     val keyWidth = unitWidth * key.widthWeight
-                    val rect = RectF(currentX, rowIndex * rowHeight, currentX + keyWidth, (rowIndex + 1) * rowHeight)
+                    val rect = RectF(currentX, mouseBtnHeight + rowIndex * rowHeight, currentX + keyWidth, mouseBtnHeight + (rowIndex + 1) * rowHeight)
                     drawnKeys.add(DrawnKey(key, rect))
                     currentX += keyWidth
                 }
             }
             
-            val mouseBtnY = landscapeRows.size * rowHeight
+            // Mouse buttons at top
             val btnWidth = width / 3f
-            leftBtnRect = RectF(0f, mouseBtnY, btnWidth, height.toFloat())
-            midBtnRect = RectF(btnWidth, mouseBtnY, btnWidth * 2, height.toFloat())
-            rightBtnRect = RectF(btnWidth * 2, mouseBtnY, width.toFloat(), height.toFloat())
+            leftBtnRect = RectF(0f, 0f, btnWidth, mouseBtnHeight)
+            midBtnRect = RectF(btnWidth, 0f, btnWidth * 2, mouseBtnHeight)
+            rightBtnRect = RectF(btnWidth * 2, 0f, width.toFloat(), mouseBtnHeight)
 
             val gKey = drawnKeys.find { it.key.label == "G" }?.rect
             val hKey = drawnKeys.find { it.key.label == "H" }?.rect
@@ -235,11 +242,12 @@ class ThinkpadKeyboardView @JvmOverloads constructor(
             canvas.drawText(dk.key.label, inset.centerX(), textY, textPaint)
         }
 
+        // Draw Mouse Buttons (Portrait and Landscape)
+        canvas.drawRoundRect(RectF(leftBtnRect.left + 4, leftBtnRect.top + 4, leftBtnRect.right - 4, leftBtnRect.bottom - 4), 16f, 16f, mouseBtnLeftPaint)
+        canvas.drawRoundRect(RectF(midBtnRect.left + 4, midBtnRect.top + 4, midBtnRect.right - 4, midBtnRect.bottom - 4), 16f, 16f, mouseBtnMidPaint)
+        canvas.drawRoundRect(RectF(rightBtnRect.left + 4, rightBtnRect.top + 4, rightBtnRect.right - 4, rightBtnRect.bottom - 4), 16f, 16f, mouseBtnRightPaint)
+
         if (!isPortrait) {
-            canvas.drawRoundRect(RectF(leftBtnRect.left + 4, leftBtnRect.top + 4, leftBtnRect.right - 4, leftBtnRect.bottom - 4), 16f, 16f, mouseBtnLeftPaint)
-            canvas.drawRoundRect(RectF(midBtnRect.left + 4, midBtnRect.top + 4, midBtnRect.right - 4, midBtnRect.bottom - 4), 16f, 16f, mouseBtnMidPaint)
-            canvas.drawRoundRect(RectF(rightBtnRect.left + 4, rightBtnRect.top + 4, rightBtnRect.right - 4, rightBtnRect.bottom - 4), 16f, 16f, mouseBtnRightPaint)
-            
             if (!trackPointRect.isEmpty) {
                 canvas.drawCircle(trackPointRect.centerX(), trackPointRect.centerY(), trackPointRect.width() / 2, trackPointPaint)
                 canvas.drawCircle(trackPointRect.centerX(), trackPointRect.centerY(), trackPointRect.width() / 2, trackPointStroke)
@@ -297,10 +305,7 @@ class ThinkpadKeyboardView @JvmOverloads constructor(
             if (isThreeFingerSwiping) return true
         }
 
-        if (isPortrait && y < height / 2f) {
-            // Forward to MainActivity's trackpad by returning false? 
-            // Better to route it manually if we were in the same class, but since we are a custom View,
-            // we can just not consume it. However, multi-touch might get confused.
+        if (isPortrait && y < (height / 2f - (height * 0.08f))) {
             return false
         }
 
@@ -357,23 +362,25 @@ class ThinkpadKeyboardView @JvmOverloads constructor(
             }
         }
 
-        if (!isPortrait && y > leftBtnRect.top) {
-            val mask: Byte = when {
-                leftBtnRect.contains(rawX, y) -> 1
-                midBtnRect.contains(rawX, y) -> 4
-                rightBtnRect.contains(rawX, y) -> 2
-                else -> 0
-            }
-            
+        // Handle Mouse Buttons
+        val mouseMask: Byte = when {
+            leftBtnRect.contains(rawX, y) -> 1
+            midBtnRect.contains(rawX, y) -> 4
+            rightBtnRect.contains(rawX, y) -> 2
+            else -> 0
+        }
+        
+        if (mouseMask > 0 || (action == MotionEvent.ACTION_UP && currentMouseButtons > 0)) {
             when (action) {
                 MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
-                    if (mask > 0) {
-                        currentMouseButtons = (currentMouseButtons.toInt() or mask.toInt()).toByte()
+                    if (mouseMask > 0) {
+                        currentMouseButtons = (currentMouseButtons.toInt() or mouseMask.toInt()).toByte()
                         listener?.onMouseReport(currentMouseButtons, 0, 0, 0)
                         return true
                     }
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Simplified: release all on any UP
                     currentMouseButtons = 0
                     listener?.onMouseReport(0, 0, 0, 0)
                     return true
