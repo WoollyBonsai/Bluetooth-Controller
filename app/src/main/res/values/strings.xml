@@ -4,7 +4,8 @@
         <item>1. Trackpad Only</item>
         <item>2. Trackpad + Keyboard</item>
         <item>3. Thinkpad Style</item>
-        <item>4. Multimedia Control</item>
+        <item>4. Multimedia Mode</item>
         <item>5. Presentation Mode</item>
+        <item>6. Xbox Controller Mode</item>
     </string-array>
 </resources>

@@ -30,6 +30,7 @@ id btnVolUp
 id contentContainer
 id etImmediateSend
 id etStringSend
+id layoutGamepad
 id layoutMultimedia
 id layoutPresentation
 id layoutThinkpad

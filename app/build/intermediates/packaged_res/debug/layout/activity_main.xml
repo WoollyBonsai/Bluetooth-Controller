@@ -310,6 +310,15 @@
                     android:textSize="24sp" />
             </LinearLayout>
         </LinearLayout>
+        <!-- Mode 6: Xbox Controller Mode -->
+        <FrameLayout
+            android:id="@+id/layoutGamepad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="#1a1a1a">
+        </FrameLayout>
+
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

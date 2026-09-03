@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
     // ye apna naya thinkpad clit wala mode hai (mode 3)
     private lateinit var thinkpadKeyboardView: com.example.bluetoothtrackpad.views.ThinkpadKeyboardView
     
+    private lateinit var layoutGamepad: FrameLayout
+    private lateinit var gamepadView: com.example.bluetoothtrackpad.views.GamepadView
+    
     private lateinit var etImmediateSend: EditText
     private lateinit var etStringSend: EditText
     private lateinit var btnSendString: Button
@@ -154,6 +157,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
         
+        layoutGamepad = findViewById(R.id.layoutGamepad) as FrameLayout
+        gamepadView = com.example.bluetoothtrackpad.views.GamepadView(this)
+        layoutGamepad.addView(gamepadView)
+        
+        gamepadView.listener = object : com.example.bluetoothtrackpad.views.GamepadView.Listener {
+            override fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, rx: Byte, ry: Byte) {
+                if (hostDevice == null) return
+                val reportData = ByteArray(7)
+                reportData[0] = (buttons.toInt() and 0xFF).toByte()
+                reportData[1] = ((buttons.toInt() shr 8) and 0xFF).toByte()
+                reportData[2] = dpad
+                reportData[3] = lx
+                reportData[4] = ly
+                reportData[5] = rx
+                reportData[6] = ry
+                
+                reportExecutor.execute {
+                    hidDevice?.sendReport(hostDevice, HidUtils.GAMEPAD_REPORT_ID.toInt(), reportData)
+                }
+            }
+        }
+
         etImmediateSend = findViewById(R.id.etImmediateSend)
         etStringSend = findViewById(R.id.etStringSend)
         btnSendString = findViewById(R.id.btnSendString)
