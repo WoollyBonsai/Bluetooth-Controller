@@ -68,10 +68,10 @@ class GamepadView @JvmOverloads constructor(
     // 1: A, 2: B, 3: X, 4: Y
     // 5: LB, 6: RB, 7: LT, 8: RT
     // 9: Select, 10: Start, 11: L3, 12: R3, 13: W Logo
-                private val btnMasks = mapOf(
+                    private val btnMasks = mapOf(
         "A" to 1, "B" to 2, "X" to 4, "Y" to 8,
-        "LB" to 16, "RB" to 32, "Select" to 256, "Start" to 512,
-        "L3" to 1024, "R3" to 2048, "W" to 4096
+        "LB" to 16, "RB" to 32, "Select" to 64, "Start" to 128,
+        "L3" to 256, "R3" to 512, "W" to 1024
     )
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -244,7 +244,13 @@ class GamepadView @JvmOverloads constructor(
                         val hit = RectF(rect.left - 20, rect.top - 20, rect.right + 20, rect.bottom + 20)
                         if (hit.contains(x, y)) {
                             activePointers[pointerId] = name
-                            buttonsMask = (buttonsMask.toInt() or btnMasks[name]!!).toShort()
+                            if (name == "LT") {
+                                leftTrigger = 255.toByte()
+                            } else if (name == "RT") {
+                                rightTrigger = 255.toByte()
+                            } else {
+                                buttonsMask = (buttonsMask.toInt() or btnMasks[name]!!).toShort()
+                            }
                             stateChanged = true
                             break
                         }
@@ -283,6 +289,12 @@ class GamepadView @JvmOverloads constructor(
                 } else if (target == "DPAD") {
                     currentDpad = 0
                     stateChanged = true
+                } else if (target == "LT") {
+                    leftTrigger = 0.toByte()
+                    stateChanged = true
+                } else if (target == "RT") {
+                    rightTrigger = 0.toByte()
+                    stateChanged = true
                 } else if (target != null && btnMasks.containsKey(target)) {
                     buttonsMask = (buttonsMask.toInt() and btnMasks[target]!!.inv()).toShort()
                     stateChanged = true
@@ -304,8 +316,12 @@ class GamepadView @JvmOverloads constructor(
         val dx = px - center.x
         val dy = py - center.y
         val dist = sqrt(dx * dx + dy * dy)
+        val deadzone = stickRadius * 0.1f // 10% deadzone for hall-effect feel
         
-        if (dist > stickRadius) {
+        if (dist < deadzone) {
+            current.x = center.x
+            current.y = center.y
+        } else if (dist > stickRadius) {
             val angle = atan2(dy, dx)
             current.x = center.x + cos(angle) * stickRadius
             current.y = center.y + sin(angle) * stickRadius
@@ -314,9 +330,9 @@ class GamepadView @JvmOverloads constructor(
             current.y = py
         }
 
-        // Map to 0-255
-        val mappedX = ((current.x - center.x) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
-        val mappedY = ((current.y - center.y) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
+        // Smooth curve mapping to 0-255 outside deadzone
+        val mappedX = if (dist < deadzone) 128 else ((current.x - center.x) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
+        val mappedY = if (dist < deadzone) 128 else ((current.y - center.y) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
         
         if (isLeft) {
             leftStickX = mappedX.toByte()
