@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         btnConnect = findViewById(R.id.btnConnect)
         tvStatus = findViewById(R.id.tvStatus)
         spinnerMode = findViewById(R.id.spinnerMode)
+        findViewById<Button>(R.id.btnSettings).setOnClickListener { startActivity(android.content.Intent(this, SettingsActivity::class.java)) }
 
         layoutTrackpadOnly = findViewById(R.id.layoutTrackpadOnly)
         layoutTrackpadKeyboard = findViewById(R.id.layoutTrackpadKeyboard)
@@ -694,13 +695,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val spinnerMode: android.widget.Spinner = findViewById(R.id.spinnerMode)
         val adapter = android.widget.ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, allOptions)
         
-        // To preserve selection, remove listener, update adapter, re-add listener
+        // To preserve selection, update adapter and add listener
         val currentSelection = spinnerMode.selectedItemPosition
-        spinnerMode.onItemSelectedListener = null
         spinnerMode.adapter = adapter
-        if (currentSelection < allOptions.size) {
-            spinnerMode.setSelection(currentSelection)
-        }
         
         spinnerMode.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -708,6 +705,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
+        
+        if (currentSelection >= 0 && currentSelection < allOptions.size) {
+            spinnerMode.setSelection(currentSelection)
+        } else {
+            spinnerMode.setSelection(0)
+        }
+        switchLayout(if (currentSelection >= 0) currentSelection else 0)
     }
 
     override fun onPause() {

@@ -1,26 +1,30 @@
 [
     {
-        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpad_background.xml.flat",
-        "source": "com.example.bluetoothtrackpad.app-main-33:/drawable/trackpad_background.xml"
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/layout/activity_main.xml"
     },
     {
-        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/xml_backup_rules.xml.flat",
-        "source": "com.example.bluetoothtrackpad.app-main-33:/xml/backup_rules.xml"
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/xml_backup_rules.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpoint_bg.xml.flat",
-        "source": "com.example.bluetoothtrackpad.app-main-33:/drawable/trackpoint_bg.xml"
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpoint_bg.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/drawable/trackpoint_bg.xml"
     },
     {
         "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_main.xml.flat",
         "source": "com.example.bluetoothtrackpad.app-main-33:/layout/activity_main.xml"
     },
     {
-        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/xml_data_extraction_rules.xml.flat",
-        "source": "com.example.bluetoothtrackpad.app-main-33:/xml/data_extraction_rules.xml"
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/xml_data_extraction_rules.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_settings.xml.flat",
-        "source": "com.example.bluetoothtrackpad.app-main-33:/layout/activity_settings.xml"
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpad_background.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/drawable/trackpad_background.xml"
+    },
+    {
+        "merged": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_settings.xml.flat",
+        "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/layout/activity_settings.xml"
     }
 ]
