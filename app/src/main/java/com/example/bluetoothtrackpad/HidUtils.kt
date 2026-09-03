@@ -116,7 +116,7 @@ object HidUtils {
         0x65.toByte(), 0x14.toByte(), //   Unit (Eng Rot:Angular Pos)
         0x75.toByte(), 0x04.toByte(), //   Report Size (4)
         0x95.toByte(), 0x01.toByte(), //   Report Count (1)
-        0x81.toByte(), 0x02.toByte(), //   Input (Data, Variable, Absolute)
+        0x81.toByte(), 0x42.toByte(), //   Input (Data, Variable, Absolute, Null State)
 
         // Padding for Hat switch
         0x75.toByte(), 0x04.toByte(), //   Report Size (4)
