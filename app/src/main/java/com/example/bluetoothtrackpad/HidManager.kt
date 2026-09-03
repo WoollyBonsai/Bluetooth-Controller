@@ -54,5 +54,9 @@ class HidManager(val context: Context) {
             }
             hidCallback.onConnectionStateChanged(device, state)
         }
+        
+        override fun onAppStatusChanged(pluggedDevice: BluetoothDevice?, registered: Boolean) {
+            hidCallback.onAppStatusChanged(pluggedDevice, registered)
+        }
     }
 }

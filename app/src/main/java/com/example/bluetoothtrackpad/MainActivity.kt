@@ -219,6 +219,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     }
                 }
             }
+            
+            override fun onAppStatusChanged(pluggedDevice: BluetoothDevice?, registered: Boolean) {
+                super.onAppStatusChanged(pluggedDevice, registered)
+                runOnUiThread {
+                    if (registered) {
+                        android.util.Log.d("HID", "App Registered Successfully")
+                    } else {
+                        tvStatus.text = "HID Reg Failed!"
+                        android.util.Log.e("HID", "App Registration Failed! Descriptor might be invalid.")
+                    }
+                }
+            }
         })
 
         btnInit.setOnClickListener {

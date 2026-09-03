@@ -88,6 +88,7 @@ object HidUtils {
         0x75.toByte(), 0x10.toByte(), //   Report Size (16)
         0x95.toByte(), 0x01.toByte(), //   Report Count (1)
         0x81.toByte(), 0x00.toByte(), //   Input (Data, Array)
+        0xC0.toByte(), // End Collection
 
         // gamepad ka swagat karo (ID 4)
         0x05.toByte(), 0x01.toByte(), // Usage Page (Generic Desktop)
