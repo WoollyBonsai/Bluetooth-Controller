@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     // alag alag screens ka setup
     private lateinit var layoutTrackpadOnly: View
     private lateinit var layoutTrackpadKeyboard: View
-    private lateinit var layoutThinkpad: View
+    private lateinit var layoutThinkpad: FrameLayout
     private lateinit var layoutMultimedia: View
     private lateinit var layoutPresentation: View
     private lateinit var layouts: Array<View>
@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnRightClick2: Button
     
     // ye apna naya thinkpad clit wala mode hai (mode 3)
-    private lateinit var layoutThinkpad: FrameLayout
     private lateinit var thinkpadKeyboardView: com.example.bluetoothtrackpad.views.ThinkpadKeyboardView
     
     private lateinit var etImmediateSend: EditText
@@ -245,9 +244,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         val buttonTouchListener = View.OnTouchListener { v, event ->
             val buttonMask = when (v.id) {
-                R.id.btnLeftClick1, R.id.btnLeftClick2, R.id.btnLeftClick3 -> 1.toByte()
-                R.id.btnRightClick1, R.id.btnRightClick2, R.id.btnRightClick3 -> 2.toByte()
-                R.id.btnMiddleClick1, R.id.btnMiddleClick2, R.id.btnMiddleClick3 -> 4.toByte()
+                R.id.btnLeftClick1, R.id.btnLeftClick2 -> 1.toByte()
+                R.id.btnRightClick1, R.id.btnRightClick2 -> 2.toByte()
+                R.id.btnMiddleClick1, R.id.btnMiddleClick2 -> 4.toByte()
                 else -> 0.toByte()
             }
 

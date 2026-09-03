@@ -182,77 +182,20 @@
         </LinearLayout>
 
         <!-- Mode 3: Thinkpad Style -->
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/layoutThinkpad"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:visibility="gone"
             android:background="#2a2a2a">
-
-            <LinearLayout
+            
+            <View
+                android:id="@+id/touchArea3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="4dp">
-                
-                <EditText
-                    android:id="@+id/etThinkpadInput"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Type here..."
-                    android:textColor="#FFF"
-                    android:textColorHint="#AAA" />
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/thinkpadJoystickArea"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <View
-                    android:id="@+id/btnTrackPoint"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/trackpoint_bg"
-                    android:clickable="true"
-                    android:focusable="true"/>
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:padding="4dp">
-
-                <Button
-                    android:id="@+id/btnLeftClick3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="L"
-                    android:backgroundTint="#d83a3a"/>
-
-                <Button
-                    android:id="@+id/btnMiddleClick3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="M"
-                    android:backgroundTint="#2951cc"/>
-
-                <Button
-                    android:id="@+id/btnRightClick3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="R"
-                    android:backgroundTint="#d83a3a"/>
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_height="match_parent" />
+            
+            <!-- Dynamically populated in Kotlin -->
+        </FrameLayout>
 
         <!-- Mode 4: Multimedia Control -->
         <LinearLayout
