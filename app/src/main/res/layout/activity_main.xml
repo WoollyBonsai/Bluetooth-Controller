@@ -202,9 +202,46 @@
             android:id="@+id/layoutMultimedia"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Multimedia Layout (Coming Soon)" />
+            android:visibility="gone"
+            android:background="#2a2a2a"
+            android:padding="16dp">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Media Controls"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:layout_marginBottom="16dp"/>
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="4"
+                android:useDefaultMargins="true"
+                android:alignmentMode="alignBounds">
+
+                <!-- Row 1: Volume -->
+                <Button android:id="@+id/btnVolDown" android:text="Vol -" />
+                <Button android:id="@+id/btnMute" android:text="Mute" />
+                <Button android:id="@+id/btnVolUp" android:text="Vol +" />
+
+                <!-- Row 2: Media -->
+                <Button android:id="@+id/btnPrevTrack" android:text="Prev" />
+                <Button android:id="@+id/btnPlayPause" android:text="Play/Pause" />
+                <Button android:id="@+id/btnNextTrack" android:text="Next" />
+                
+                <!-- Row 3: Brightness -->
+                <Button android:id="@+id/btnBrightDown" android:text="Bright -" />
+                <Space android:layout_width="50dp" />
+                <Button android:id="@+id/btnBrightUp" android:text="Bright +" />
+                
+                <!-- Row 4: Display Mode -->
+                <Button android:id="@+id/btnDisplayMode" android:layout_columnSpan="3" android:layout_gravity="fill_horizontal" android:text="Toggle Display (Win+P)" />
+            </GridLayout>
         </LinearLayout>
 
         <!-- Mode 5: Presentation Mode -->
@@ -212,9 +249,66 @@
             android:id="@+id/layoutPresentation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Presentation Layout (Coming Soon)" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="#2a2a2a">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+                
+                <Button
+                    android:id="@+id/btnF5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="F5 (Start)" />
+                    
+                <Button
+                    android:id="@+id/btnEsc"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Esc (Stop)" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pointer Area"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                android:padding="8dp"/>
+                
+            <View
+                android:id="@+id/touchAreaPresentation"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#1a1a1a" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPrevSlide"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="&lt; Prev"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/btnNextSlide"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Next &gt;"
+                    android:textSize="24sp" />
+            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>
