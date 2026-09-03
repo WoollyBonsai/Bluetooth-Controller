@@ -3197,8 +3197,8 @@ id btnBrightDown
 id btnBrightUp
 id btnClipboard
 id btnConnect
+id btnCreateLayout
 id btnDisplayMode
-id btnEditLayout
 id btnEsc
 id btnF5
 id btnInit
@@ -3246,6 +3246,7 @@ id compress
 id confirm_button
 id constraint
 id container
+id containerLayouts
 id content
 id contentContainer
 id contentPanel
@@ -3357,6 +3358,7 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutCustom
 id layoutGamepad
 id layoutMultimedia
 id layoutPresentation

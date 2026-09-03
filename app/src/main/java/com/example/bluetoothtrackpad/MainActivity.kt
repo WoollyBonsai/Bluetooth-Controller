@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var gyroSensor: Sensor? = null
     private var currentLayoutIndex = 0
+    private var customLayouts = mutableListOf<com.example.bluetoothtrackpad.models.CustomLayout>()
 
     private lateinit var hidManager: HidManager
     
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var thinkpadKeyboardView: com.example.bluetoothtrackpad.views.ThinkpadKeyboardView
     
     private lateinit var layoutGamepad: FrameLayout
+    private lateinit var layoutCustom: FrameLayout
     private lateinit var gamepadView: com.example.bluetoothtrackpad.views.GamepadView
     
     private lateinit var etImmediateSend: EditText
@@ -116,6 +118,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         layoutMultimedia = findViewById(R.id.layoutMultimedia)
         layoutPresentation = findViewById(R.id.layoutPresentation)
         layoutGamepad = findViewById(R.id.layoutGamepad) as FrameLayout
+        layoutCustom = findViewById(R.id.layoutCustom) as FrameLayout
         
         layouts = arrayOf(
             layoutTrackpadOnly,
@@ -123,7 +126,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             layoutThinkpad,
             layoutMultimedia,
             layoutPresentation,
-            layoutGamepad
+            layoutGamepad,
+            layoutCustom
         )
 
         spinnerMode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -276,8 +280,37 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun switchLayout(index: Int) {
         currentLayoutIndex = index
-        for (i in layouts.indices) {
-            layouts[i].visibility = if (i == index) View.VISIBLE else View.GONE
+        
+        if (index < 6) {
+            for (i in 0 until 6) {
+                layouts[i].visibility = if (i == index) View.VISIBLE else View.GONE
+            }
+            layoutCustom.visibility = View.GONE
+        } else {
+            for (i in 0 until 6) {
+                layouts[i].visibility = View.GONE
+            }
+            layoutCustom.visibility = View.VISIBLE
+            
+            // Render custom layout dynamically
+            layoutCustom.removeAllViews()
+            val customIdx = index - 6
+            if (customIdx < customLayouts.size) {
+                val conf = customLayouts[customIdx]
+                val renderer = com.example.bluetoothtrackpad.views.CustomLayoutRenderer(this, conf, object : com.example.bluetoothtrackpad.views.CustomLayoutRenderer.Listener {
+                    override fun onMacroTriggered(keycodes: List<Byte>) {
+                        for (k in keycodes) {
+                            sendKeyboardReport(0, k)
+                            Thread.sleep(10)
+                            sendKeyboardReport(0, 0)
+                            Thread.sleep(10)
+                        }
+                    }
+                })
+                layoutCustom.addView(renderer)
+                requestedOrientation = if (conf.isLandscape) android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                return
+            }
         }
         
         // Force Landscape for Gamepad (mode index 5)
@@ -651,6 +684,29 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onResume()
         gyroSensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
+        }
+        
+        // Refresh Spinner
+        customLayouts = LayoutManager.getLayouts(this)
+        val defaultOptions = resources.getStringArray(R.array.mode_array).toList()
+        val allOptions = defaultOptions + customLayouts.map { it.name }
+        
+        val spinnerMode: android.widget.Spinner = findViewById(R.id.spinnerMode)
+        val adapter = android.widget.ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, allOptions)
+        
+        // To preserve selection, remove listener, update adapter, re-add listener
+        val currentSelection = spinnerMode.selectedItemPosition
+        spinnerMode.onItemSelectedListener = null
+        spinnerMode.adapter = adapter
+        if (currentSelection < allOptions.size) {
+            spinnerMode.setSelection(currentSelection)
+        }
+        
+        spinnerMode.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                switchLayout(position)
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
     }
 

@@ -7,8 +7,8 @@ id btnBrightDown
 id btnBrightUp
 id btnClipboard
 id btnConnect
+id btnCreateLayout
 id btnDisplayMode
-id btnEditLayout
 id btnEsc
 id btnF5
 id btnInit
@@ -29,9 +29,11 @@ id btnSettings
 id btnSpecialKeys
 id btnVolDown
 id btnVolUp
+id containerLayouts
 id contentContainer
 id etImmediateSend
 id etStringSend
+id layoutCustom
 id layoutGamepad
 id layoutMultimedia
 id layoutPresentation

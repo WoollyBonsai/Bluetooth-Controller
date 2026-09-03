@@ -317,6 +317,11 @@
                     android:textSize="24sp" />
             </LinearLayout>
         </LinearLayout>
+        <FrameLayout
+            android:id="@+id/layoutCustom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
         <!-- Mode 6: Xbox Controller Mode -->
         <FrameLayout
             android:id="@+id/layoutGamepad"
