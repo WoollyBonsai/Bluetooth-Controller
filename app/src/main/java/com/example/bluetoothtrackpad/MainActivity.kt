@@ -9,6 +9,10 @@ import android.bluetooth.BluetoothProfile
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
@@ -23,7 +27,10 @@ import androidx.core.content.ContextCompat
 import java.util.concurrent.Executors
 
 @SuppressLint("MissingPermission")
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SensorEventListener {
+    private lateinit var sensorManager: SensorManager
+    private var gyroSensor: Sensor? = null
+    private var currentLayoutIndex = 0
 
     private lateinit var hidManager: HidManager
     
@@ -108,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         layoutThinkpad = findViewById(R.id.layoutThinkpad)
         layoutMultimedia = findViewById(R.id.layoutMultimedia)
         layoutPresentation = findViewById(R.id.layoutPresentation)
+        layoutGamepad = findViewById(R.id.layoutGamepad) as FrameLayout
         
         layouts = arrayOf(
             layoutTrackpadOnly,
@@ -158,10 +166,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         
-        layoutGamepad = findViewById(R.id.layoutGamepad) as FrameLayout
         gamepadView = com.example.bluetoothtrackpad.views.GamepadView(this)
         gamepadView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         layoutGamepad.addView(gamepadView)
+        
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+
         
         gamepadView.listener = object : com.example.bluetoothtrackpad.views.GamepadView.Listener {
             override fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, rx: Byte, ry: Byte) {
@@ -264,6 +275,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchLayout(index: Int) {
+        currentLayoutIndex = index
         for (i in layouts.indices) {
             layouts[i].visibility = if (i == index) View.VISIBLE else View.GONE
         }
@@ -634,6 +646,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
+
+    override fun onResume() {
+        super.onResume()
+        gyroSensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null || event.sensor.type != Sensor.TYPE_GYROSCOPE) return
+        if (!SettingsManager.isGyroEnabled(this, currentLayoutIndex)) return
+        
+        val sensitivity = SettingsManager.getSensitivity(this, currentLayoutIndex)
+        val mult = (sensitivity / 50f) * 15f // 50 is default
+        
+        var dx = 0f
+        var dy = 0f
+        
+        // Portrait vs Landscape gyro axes
+        if (currentLayoutIndex == 5) { // Gamepad is Landscape
+            dx = -event.values[0] * mult // Pitch
+            dy = -event.values[1] * mult // Roll
+        } else {
+            dx = -event.values[1] * mult // Roll
+            dy = event.values[0] * mult // Pitch
+        }
+
+        if (Math.abs(dx) > 1f || Math.abs(dy) > 1f) {
+            sendMouseReport(dx.toInt(), dy.toInt(), 0, null)
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
     override fun onDestroy() {
         super.onDestroy()
         reportExecutor.shutdown()
