@@ -27,13 +27,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var hidManager: HidManager
     
-    // Top Bar
+    // upar wale buttons wagera
     private lateinit var btnInit: Button
     private lateinit var btnConnect: Button
     private lateinit var tvStatus: TextView
     private lateinit var spinnerMode: Spinner
 
-    // Layouts
+    // alag alag screens ka setup
     private lateinit var layoutTrackpadOnly: View
     private lateinit var layoutTrackpadKeyboard: View
     private lateinit var layoutThinkpad: View
@@ -41,24 +41,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutPresentation: View
     private lateinit var layouts: Array<View>
 
-    // Trackpad 1 (Mode 1)
+    // pehla wala trackpad (sirf mouse)
     private lateinit var touchArea1: View
     private lateinit var btnLeftClick1: Button
     private lateinit var btnMiddleClick1: Button
     private lateinit var btnRightClick1: Button
 
-    // Trackpad 2 (Mode 2)
+    // dusra trackpad (isame keyboard bhi sath me ata hai)
     private lateinit var touchArea2: View
     private lateinit var btnLeftClick2: Button
     private lateinit var btnMiddleClick2: Button
     private lateinit var btnRightClick2: Button
     
-    // Thinkpad (Mode 3)
-    private lateinit var etThinkpadInput: EditText
-    private lateinit var btnTrackPoint: View
-    private lateinit var btnLeftClick3: Button
-    private lateinit var btnMiddleClick3: Button
-    private lateinit var btnRightClick3: Button
+    // ye apna naya thinkpad clit wala mode hai (mode 3)
+    private lateinit var layoutThinkpad: FrameLayout
+    private lateinit var thinkpadKeyboardView: com.example.bluetoothtrackpad.views.ThinkpadKeyboardView
     
     private lateinit var etImmediateSend: EditText
     private lateinit var etStringSend: EditText
@@ -66,13 +63,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnClipboard: Button
     private lateinit var btnSpecialKeys: Button
 
-    // Trackpad State
+    // mouse cursor ka haal chaal
     private var lastX = 0f
     private var lastY = 0f
     private var lastScrollY = 0f
     private var currentButtonsState: Byte = 0
     
-    // Gestures State
+    // ungliyo ka tracking (gestures)
     private var downTime = 0L
     private var isDragging = false
     private var hasMoved = false
@@ -125,24 +122,38 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // Mode 1 UI
+        // pehle mode ka jugaad
         touchArea1 = findViewById(R.id.touchArea1)
         btnLeftClick1 = findViewById(R.id.btnLeftClick1)
         btnMiddleClick1 = findViewById(R.id.btnMiddleClick1)
         btnRightClick1 = findViewById(R.id.btnRightClick1)
 
-        // Mode 2 UI
+        // dusre ka saman
         touchArea2 = findViewById(R.id.touchArea2)
         btnLeftClick2 = findViewById(R.id.btnLeftClick2)
         btnMiddleClick2 = findViewById(R.id.btnMiddleClick2)
         btnRightClick2 = findViewById(R.id.btnRightClick2)
         
-        // Mode 3 UI
-        etThinkpadInput = findViewById(R.id.etThinkpadInput)
-        btnTrackPoint = findViewById(R.id.btnTrackPoint)
-        btnLeftClick3 = findViewById(R.id.btnLeftClick3)
-        btnMiddleClick3 = findViewById(R.id.btnMiddleClick3)
-        btnRightClick3 = findViewById(R.id.btnRightClick3)
+        // teesra thinkpad saman bind kar rhe
+        layoutThinkpad = findViewById(R.id.layoutThinkpad) as FrameLayout
+        val touchArea3 = findViewById<View>(R.id.touchArea3)
+        thinkpadKeyboardView = com.example.bluetoothtrackpad.views.ThinkpadKeyboardView(this)
+        layoutThinkpad.addView(thinkpadKeyboardView)
+        
+        thinkpadKeyboardView.listener = object : com.example.bluetoothtrackpad.views.ThinkpadKeyboardView.Listener {
+            override fun onKeyboardReport(modifiers: Byte, keyCodes: ByteArray) {
+                if (hostDevice == null) return
+                val reportData = ByteArray(8)
+                reportData[0] = modifiers
+                System.arraycopy(keyCodes, 0, reportData, 2, 6)
+                reportExecutor.execute {
+                    hidDevice?.sendReport(hostDevice, HidUtils.KEYBOARD_REPORT_ID.toInt(), reportData)
+                }
+            }
+            override fun onMouseReport(buttons: Byte, dx: Int, dy: Int, wheel: Int) {
+                sendMouseReport(dx, dy, wheel, buttons)
+            }
+        }
         
         etImmediateSend = findViewById(R.id.etImmediateSend)
         etStringSend = findViewById(R.id.etStringSend)
@@ -178,11 +189,10 @@ class MainActivity : AppCompatActivity() {
 
         setupTrackpad(touchArea1)
         setupTrackpad(touchArea2)
-        setupTrackPoint()
+        setupTrackpad(touchArea3)
         setupButtons()
         setupKeyboardInputs()
         setupImmediateInput(etImmediateSend)
-        setupImmediateInput(etThinkpadInput)
     }
 
     private fun showPairedDevicesDialog() {
@@ -263,16 +273,12 @@ class MainActivity : AppCompatActivity() {
         btnLeftClick2.setOnTouchListener(buttonTouchListener)
         btnRightClick2.setOnTouchListener(buttonTouchListener)
         btnMiddleClick2.setOnTouchListener(buttonTouchListener)
-
-        btnLeftClick3.setOnTouchListener(buttonTouchListener)
-        btnRightClick3.setOnTouchListener(buttonTouchListener)
-        btnMiddleClick3.setOnTouchListener(buttonTouchListener)
     }
 
     private fun setupImmediateInput(editText: EditText) {
         editText.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
-                sendKeyboardReport(0, 0x2A) // Backspace HID
+                sendKeyboardReport(0, 0x2A) // delete maro bhai
                 Thread {
                     Thread.sleep(10)
                     sendKeyboardReport(0, 0)
@@ -310,7 +316,7 @@ class MainActivity : AppCompatActivity() {
                 Thread {
                     for (char in text) {
                         sendChar(char)
-                        Thread.sleep(20) // small delay between keystrokes
+                        Thread.sleep(20) // thoda sabar karo PC hang na ho jaye
                     }
                     runOnUiThread { etStringSend.text.clear() }
                 }.start()
@@ -325,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("Special Keys")
                 .setItems(specialKeys) { _, which ->
                     sendKeyboardReport(0, keyCodes[which])
-                    // Release key
+                    // button chhodo varna dab ke reh jayega
                     Thread {
                         Thread.sleep(10)
                         sendKeyboardReport(0, 0)
@@ -354,7 +360,7 @@ class MainActivity : AppCompatActivity() {
         val mapping = HidUtils.charToHid(char)
         if (mapping != null) {
             sendKeyboardReport(mapping.first, mapping.second)
-            // Need a slight delay and then release
+            // halka sa ruk ke button chhod do pc ko register karne do
             Thread.sleep(10)
             sendKeyboardReport(0, 0)
         }
@@ -381,7 +387,7 @@ class MainActivity : AppCompatActivity() {
             "Android Trackpad",
             "A virtual mouse and keyboard for your computer",
             "Example Inc.",
-            0xC0.toByte(), // SUBCLASS1_COMBO (Mouse + Keyboard)
+            0xC0.toByte(), // ye pc ko bata raha hai ki hum dono hain mouse bhi keyboard bhi
             HidUtils.COMPOSITE_HID_DESCRIPTOR
         )
         hidManager.startDiscovery(sdpSettings)
@@ -405,85 +411,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var tpLastX = 0f
-    private var tpLastY = 0f
-    private var isJoysticking = false
-    private var tpDownTime = 0L
-    private var tpMoved = false
-    private var tpTapCount = 0
-    private var tpTapRunnable: Runnable? = null
-    private val TP_DOUBLE_TAP_TIMEOUT = 250L
-
-    private val joystickRunnable = object : Runnable {
-        override fun run() {
-            if (isJoysticking) {
-                val centerX = btnTrackPoint.width / 2f
-                val centerY = btnTrackPoint.height / 2f
-                
-                val dx = (tpLastX - centerX) / 3f
-                val dy = (tpLastY - centerY) / 3f
-                
-                if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
-                    sendMouseReport(dx.toInt(), dy.toInt(), 0)
-                }
-                
-                handler.postDelayed(this, 30) // ~33fps
-            }
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupTrackPoint() {
-        btnTrackPoint.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    isJoysticking = true
-                    tpLastX = event.x
-                    tpLastY = event.y
-                    tpDownTime = System.currentTimeMillis()
-                    tpMoved = false
-                    handler.post(joystickRunnable)
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    tpLastX = event.x
-                    tpLastY = event.y
-                    if (Math.abs(event.x - btnTrackPoint.width / 2f) > 15 || Math.abs(event.y - btnTrackPoint.height / 2f) > 15) {
-                        tpMoved = true
-                    }
-                }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    isJoysticking = false
-                    handler.removeCallbacks(joystickRunnable)
-                    
-                    val upTime = System.currentTimeMillis()
-                    if (!tpMoved && (upTime - tpDownTime) < TP_DOUBLE_TAP_TIMEOUT) {
-                        tpTapCount++
-                        if (tpTapCount == 1) {
-                            tpTapRunnable = Runnable {
-                                if (tpTapCount == 1) {
-                                    // Single tap
-                                    sendMouseReport(0, 0, 0, 1)
-                                    handler.postDelayed({ sendMouseReport(0, 0, 0, 0) }, 30)
-                                }
-                                tpTapCount = 0
-                            }
-                            handler.postDelayed(tpTapRunnable!!, TP_DOUBLE_TAP_TIMEOUT)
-                        } else if (tpTapCount == 2) {
-                            // Double tap
-                            tpTapRunnable?.let { handler.removeCallbacks(it) }
-                            sendMouseReport(0, 0, 0, 2)
-                            handler.postDelayed({ sendMouseReport(0, 0, 0, 0) }, 30)
-                            tpTapCount = 0
-                        }
-                    } else {
-                        tpTapCount = 0 // Reset if moved
-                    }
-                }
-            }
-            true
-        }
-    }
-
     private val longPressRunnable = Runnable {
         if (!hasMoved) {
             isDragging = true
@@ -502,7 +429,7 @@ class MainActivity : AppCompatActivity() {
                 hasMoved = false
                 twoFingerTap = false
                 
-                // If held for 300ms without moving, trigger drag (left click hold)
+                // agar 300ms tak chipak ke betha hai bina hile toh drag chalu (left click hold)
                 handler.postDelayed(longPressRunnable, 300)
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
@@ -533,7 +460,7 @@ class MainActivity : AppCompatActivity() {
                     
                     val scrollSensitivity = 10 
                     if (Math.abs(rawDy) > scrollSensitivity) {
-                        twoFingerTap = false // canceled tap
+                        twoFingerTap = false // galti se tap chalu ho gya scroll me toh band kro
                         val wheel = -rawDy / scrollSensitivity
                         sendMouseReport(0, 0, wheel)
                         lastScrollY = currentScrollY
@@ -543,7 +470,7 @@ class MainActivity : AppCompatActivity() {
             MotionEvent.ACTION_POINTER_UP -> {
                 if (pointerCount == 2 && twoFingerTap) {
                     if (System.currentTimeMillis() - twoFingerTapTime < TAP_TIMEOUT) {
-                        // Right click trigger
+                        // right click marne ka signal bhejo
                         sendMouseReport(0, 0, 0, 2.toByte())
                         handler.postDelayed({ sendMouseReport(0, 0, 0, 0.toByte()) }, 50)
                     }
@@ -558,7 +485,7 @@ class MainActivity : AppCompatActivity() {
                     currentButtonsState = (currentButtonsState.toInt() and 1.inv()).toByte()
                     sendMouseReport(0, 0, 0)
                 } else if (!hasMoved && pointerCount == 1 && (upTime - downTime) < TAP_TIMEOUT) {
-                    // Single tap -> Left click
+                    // ek tap hua hai, left click daba ke hata lo 
                     sendMouseReport(0, 0, 0, 1.toByte())
                     handler.postDelayed({ sendMouseReport(0, 0, 0, 0.toByte()) }, 50)
                 }

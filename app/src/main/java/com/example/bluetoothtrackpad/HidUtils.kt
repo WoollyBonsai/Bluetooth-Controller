@@ -6,16 +6,16 @@ object HidUtils {
     const val CONSUMER_REPORT_ID: Byte = 3
 
     val COMPOSITE_HID_DESCRIPTOR = byteArrayOf(
-        // =========================
-        // MOUSE REPORT (ID 1)
-        // =========================
+        
+        // bhai yeh mouse ka basic setup hai (ID 1)
         0x05.toByte(), 0x01.toByte(), // Usage Page (Generic Desktop)
         0x09.toByte(), 0x02.toByte(), // Usage (Mouse)
         0xA1.toByte(), 0x01.toByte(), // Collection (Application)
         0x85.toByte(), MOUSE_REPORT_ID, // Report ID (1)
         0x09.toByte(), 0x01.toByte(), //   Usage (Pointer)
         0xA1.toByte(), 0x00.toByte(), //   Collection (Physical)
-        // Buttons
+        
+        // mouse ke left right aur middle button idhar declare kiye hain
         0x05.toByte(), 0x09.toByte(), //     Usage Page (Buttons)
         0x19.toByte(), 0x01.toByte(), //     Usage Minimum (Button 1)
         0x29.toByte(), 0x03.toByte(), //     Usage Maximum (Button 3)
@@ -24,11 +24,13 @@ object HidUtils {
         0x95.toByte(), 0x03.toByte(), //     Report Count (3)
         0x75.toByte(), 0x01.toByte(), //     Report Size (1)
         0x81.toByte(), 0x02.toByte(), //     Input (Data, Variable, Absolute)
-        // Padding
+        
+        // alignment ke liye thoda padding chipka diya
         0x95.toByte(), 0x01.toByte(), //     Report Count (1)
         0x75.toByte(), 0x05.toByte(), //     Report Size (5)
         0x81.toByte(), 0x03.toByte(), //     Input (Constant)
-        // X, Y, Wheel
+        
+        // cursor ko move karne ka aur scroll ghumane ka config
         0x05.toByte(), 0x01.toByte(), //     Usage Page (Generic Desktop)
         0x09.toByte(), 0x30.toByte(), //     Usage (X)
         0x09.toByte(), 0x31.toByte(), //     Usage (Y)
@@ -41,14 +43,13 @@ object HidUtils {
         0xC0.toByte(), //   End Collection
         0xC0.toByte(), // End Collection
 
-        // =========================
-        // KEYBOARD REPORT (ID 2)
-        // =========================
+        // yaha se keyboard ka scene chalu hota hai (ID 2)
         0x05.toByte(), 0x01.toByte(), // Usage Page (Generic Desktop)
         0x09.toByte(), 0x06.toByte(), // Usage (Keyboard)
         0xA1.toByte(), 0x01.toByte(), // Collection (Application)
         0x85.toByte(), KEYBOARD_REPORT_ID, // Report ID (2)
-        // Modifier keys (8 bits)
+        
+        // shift, ctrl jese khaas modifier buttons ke liye 8 bits set kiye
         0x05.toByte(), 0x07.toByte(), //   Usage Page (Key Codes)
         0x19.toByte(), 0xE0.toByte(), //   Usage Minimum (224) - Left Control
         0x29.toByte(), 0xE7.toByte(), //   Usage Maximum (231) - Right GUI
@@ -57,11 +58,13 @@ object HidUtils {
         0x75.toByte(), 0x01.toByte(), //   Report Size (1)
         0x95.toByte(), 0x08.toByte(), //   Report Count (8)
         0x81.toByte(), 0x02.toByte(), //   Input (Data, Variable, Absolute)
-        // Reserved byte
+        
+        // ek aaltu byte windows wagera ko satisfy karne ke liye
         0x95.toByte(), 0x01.toByte(), //   Report Count (1)
         0x75.toByte(), 0x08.toByte(), //   Report Size (8)
         0x81.toByte(), 0x03.toByte(), //   Input (Constant)
-        // Key arrays (6 bytes)
+        
+        // ek saath 6 keys dabane ka support dene ka array hai
         0x95.toByte(), 0x06.toByte(), //   Report Count (6)
         0x75.toByte(), 0x08.toByte(), //   Report Size (8)
         0x15.toByte(), 0x00.toByte(), //   Logical Minimum (0)
@@ -72,9 +75,7 @@ object HidUtils {
         0x81.toByte(), 0x00.toByte(), //   Input (Data, Array)
         0xC0.toByte(), // End Collection
 
-        // =========================
-        // CONSUMER CONTROL / MEDIA (ID 3)
-        // =========================
+        // media control (play pause volume wagera) ka chhota sa code (ID 3)
         0x05.toByte(), 0x0C.toByte(), // Usage Page (Consumer)
         0x09.toByte(), 0x01.toByte(), // Usage (Consumer Control)
         0xA1.toByte(), 0x01.toByte(), // Collection (Application)
@@ -89,7 +90,7 @@ object HidUtils {
         0xC0.toByte()  // End Collection
     )
 
-    // Modifier masks
+    // bas shift kaam kar jaye uske liye mask rakha hai
     const val MOD_NONE: Byte = 0x00
     const val MOD_LEFT_SHIFT: Byte = 0x02
 
@@ -111,10 +112,10 @@ object HidUtils {
             '8', '*' -> 0x25
             '9', '(' -> 0x26
             '0', ')' -> 0x27
-            '\n' -> 0x28 // Enter
-            '\b' -> 0x2A // Backspace
-            '\t' -> 0x2B // Tab
-            ' ' -> 0x2C  // Space
+            '\n' -> 0x28 // enter
+            '\b' -> 0x2A // backspace
+            '\t' -> 0x2B // tab
+            ' ' -> 0x2C  // space
             '-', '_' -> 0x2D
             '=', '+' -> 0x2E
             '[', '{' -> 0x2F

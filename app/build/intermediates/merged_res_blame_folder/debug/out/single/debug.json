@@ -8,6 +8,10 @@
         "source": "/home/woolly/.gradle/daemon/8.4/com.example.bluetoothtrackpad.app-main-33:/xml/backup_rules.xml"
     },
     {
+        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpoint_bg.xml.flat",
+        "source": "com.example.bluetoothtrackpad.app-main-33:/drawable/trackpoint_bg.xml"
+    },
+    {
         "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_main.xml.flat",
         "source": "com.example.bluetoothtrackpad.app-main-33:/layout/activity_main.xml"
     },

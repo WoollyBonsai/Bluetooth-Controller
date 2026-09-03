@@ -3094,6 +3094,7 @@ drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
 drawable trackpad_background
+drawable trackpoint_bg
 id ALT
 id BOTTOM_END
 id BOTTOM_START
@@ -3197,12 +3198,16 @@ id btnConnect
 id btnInit
 id btnLeftClick1
 id btnLeftClick2
+id btnLeftClick3
 id btnMiddleClick1
 id btnMiddleClick2
+id btnMiddleClick3
 id btnRightClick1
 id btnRightClick2
+id btnRightClick3
 id btnSendString
 id btnSpecialKeys
+id btnTrackPoint
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -3288,6 +3293,7 @@ id enterAlwaysCollapsed
 id escape
 id etImmediateSend
 id etStringSend
+id etThinkpadInput
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3572,6 +3578,7 @@ id textinput_helper_text
 id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
+id thinkpadJoystickArea
 id time
 id title
 id titleDividerNoCustom
