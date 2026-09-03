@@ -13,7 +13,7 @@ class GamepadView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     interface Listener {
-        fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, rx: Byte, ry: Byte)
+        fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, lt: Byte, rx: Byte, ry: Byte, rt: Byte)
     }
 
     var listener: Listener? = null
@@ -30,6 +30,8 @@ class GamepadView @JvmOverloads constructor(
     private var leftStickY: Byte = 128.toByte()
     private var rightStickX: Byte = 128.toByte()
     private var rightStickY: Byte = 128.toByte()
+    private var leftTrigger: Byte = 0.toByte()
+    private var rightTrigger: Byte = 0.toByte()
 
     // Touch pointers mapping
     private val activePointers = mutableMapOf<Int, String>()
@@ -66,11 +68,10 @@ class GamepadView @JvmOverloads constructor(
     // 1: A, 2: B, 3: X, 4: Y
     // 5: LB, 6: RB, 7: LT, 8: RT
     // 9: Select, 10: Start, 11: L3, 12: R3, 13: W Logo
-    private val btnMasks = mapOf(
+                private val btnMasks = mapOf(
         "A" to 1, "B" to 2, "X" to 4, "Y" to 8,
-        "LB" to 16, "RB" to 32, "LT" to 64, "RT" to 128,
-        "Select" to 256, "Start" to 512, "L3" to 1024, "R3" to 2048,
-        "W" to 4096
+        "LB" to 16, "RB" to 32, "Select" to 256, "Start" to 512,
+        "L3" to 1024, "R3" to 2048, "W" to 4096
     )
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -339,7 +340,7 @@ class GamepadView @JvmOverloads constructor(
     }
 
     private fun sendReport() {
-        listener?.onGamepadReport(buttonsMask, currentDpad, leftStickX, leftStickY, rightStickX, rightStickY)
+        listener?.onGamepadReport(buttonsMask, currentDpad, leftStickX, leftStickY, leftTrigger, rightStickX, rightStickY, rightTrigger)
     }
 
     private fun dist(x1: Float, y1: Float, x2: Float, y2: Float) = sqrt((x1 - x2).pow(2) + (y1 - y2).pow(2))
