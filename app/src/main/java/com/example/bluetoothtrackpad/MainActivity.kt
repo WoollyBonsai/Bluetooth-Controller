@@ -114,7 +114,8 @@ class MainActivity : AppCompatActivity() {
             layoutTrackpadKeyboard,
             layoutThinkpad,
             layoutMultimedia,
-            layoutPresentation
+            layoutPresentation,
+            layoutGamepad
         )
 
         spinnerMode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -159,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         
         layoutGamepad = findViewById(R.id.layoutGamepad) as FrameLayout
         gamepadView = com.example.bluetoothtrackpad.views.GamepadView(this)
+        gamepadView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         layoutGamepad.addView(gamepadView)
         
         gamepadView.listener = object : com.example.bluetoothtrackpad.views.GamepadView.Listener {
@@ -264,6 +266,13 @@ class MainActivity : AppCompatActivity() {
     private fun switchLayout(index: Int) {
         for (i in layouts.indices) {
             layouts[i].visibility = if (i == index) View.VISIBLE else View.GONE
+        }
+        
+        // Force Landscape for Gamepad (mode index 5)
+        if (index == 5) {
+            requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
