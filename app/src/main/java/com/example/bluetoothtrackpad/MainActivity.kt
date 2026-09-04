@@ -8,6 +8,12 @@ import android.bluetooth.BluetoothHidDeviceAppSdpSettings
 import android.bluetooth.BluetoothProfile
 import android.content.pm.PackageManager
 import android.os.Build
+
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.activity.OnBackPressedCallback
+import android.widget.Button
 import android.os.Bundle
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -28,6 +34,10 @@ import java.util.concurrent.Executors
 
 @SuppressLint("MissingPermission")
 class MainActivity : AppCompatActivity(), SensorEventListener {
+    private var isFullscreen = false
+    private var backPressedTime: Long = 0
+    private lateinit var topBar: View
+
     private lateinit var sensorManager: SensorManager
     private var gyroSensor: Sensor? = null
     private var currentLayoutIndex = 0
@@ -107,7 +117,29 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        topBar = findViewById(R.id.topBar)
+
         btnInit = findViewById(R.id.btnInit)
+        val btnFullscreen = findViewById<Button>(R.id.btnFullscreen)
+        btnFullscreen.setOnClickListener {
+            enterFullscreen()
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isFullscreen) {
+                    exitFullscreen()
+                } else {
+                    if (System.currentTimeMillis() - backPressedTime < 2000) {
+                        finish()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Press back again to exit", Toast.LENGTH_SHORT).show()
+                        backPressedTime = System.currentTimeMillis()
+                    }
+                }
+            }
+        })
+
         btnConnect = findViewById(R.id.btnConnect)
         tvStatus = findViewById(R.id.tvStatus)
         spinnerMode = findViewById(R.id.spinnerMode)
@@ -547,6 +579,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Thread.sleep(10)
             sendKeyboardReport(0, 0)
         }
+    }
+
+
+    private fun enterFullscreen() {
+        isFullscreen = true
+        topBar.visibility = View.GONE
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, topBar).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
+
+    private fun exitFullscreen() {
+        isFullscreen = false
+        topBar.visibility = View.VISIBLE
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        WindowInsetsControllerCompat(window, topBar).show(WindowInsetsCompat.Type.systemBars())
     }
 
     private fun checkPermissionsAndInit() {
