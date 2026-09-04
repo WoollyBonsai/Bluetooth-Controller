@@ -189,9 +189,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 reportData[3] = lx
                 reportData[4] = ly
                 reportData[5] = lt
-                reportData[6] = rx
-                reportData[7] = ry
-                reportData[8] = rt
+                reportData[6] = rt
+                reportData[7] = rx
+                reportData[8] = ry
                 
                 reportExecutor.execute {
                     hidDevice?.sendReport(hostDevice, HidUtils.GAMEPAD_REPORT_ID.toInt(), reportData)

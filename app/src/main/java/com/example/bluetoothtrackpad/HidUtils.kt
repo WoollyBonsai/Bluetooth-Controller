@@ -123,15 +123,15 @@ object HidUtils {
         0x95.toByte(), 0x01.toByte(), //   Report Count (1)
         0x81.toByte(), 0x03.toByte(), //   Input (Constant)
 
-                // 6 Axes (X, Y, Z, Rx, Ry, Rz)
-        // X,Y=LStick, Z=LTrigger, Rx,Ry=RStick, Rz=RTrigger
+                // 6 Axes (X, Y, Z, Rz, Rx, Ry)
+        // X,Y=LStick, Z=LTrigger, Rz=RTrigger, Rx,Ry=RStick
         0x05.toByte(), 0x01.toByte(), //   Usage Page (Generic Desktop)
         0x09.toByte(), 0x30.toByte(), //   Usage (X)
         0x09.toByte(), 0x31.toByte(), //   Usage (Y)
         0x09.toByte(), 0x32.toByte(), //   Usage (Z)
+        0x09.toByte(), 0x35.toByte(), //   Usage (Rz)
         0x09.toByte(), 0x33.toByte(), //   Usage (Rx)
         0x09.toByte(), 0x34.toByte(), //   Usage (Ry)
-        0x09.toByte(), 0x35.toByte(), //   Usage (Rz)
         0x15.toByte(), 0x00.toByte(), //   Logical Minimum (0)
         0x26.toByte(), 0xFF.toByte(), 0x00.toByte(), // Logical Maximum (255)
         0x75.toByte(), 0x08.toByte(), //   Report Size (8)
