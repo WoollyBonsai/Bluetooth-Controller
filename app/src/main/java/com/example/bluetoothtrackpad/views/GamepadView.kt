@@ -68,10 +68,11 @@ class GamepadView @JvmOverloads constructor(
     // 1: A, 2: B, 3: X, 4: Y
     // 5: LB, 6: RB, 7: LT, 8: RT
     // 9: Select, 10: Start, 11: L3, 12: R3, 13: W Logo
-                    private val btnMasks = mapOf(
-        "A" to 1, "B" to 2, "X" to 4, "Y" to 8,
-        "LB" to 16, "RB" to 32, "Select" to 64, "Start" to 128,
-        "L3" to 256, "R3" to 512, "W" to 1024
+                        private val btnMasks = mapOf(
+        "A" to 1, "B" to 2, "Y" to 8, "X" to 16,
+        "LB" to 64, "RB" to 128, 
+        "Select" to 1024, "Start" to 2048, "W" to 4096,
+        "L3" to 8192, "R3" to 16384
     )
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

@@ -188,9 +188,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 reportData[2] = dpad
                 reportData[3] = lx
                 reportData[4] = ly
-                reportData[5] = rx
-                reportData[6] = ry
-                reportData[7] = lt
+                reportData[5] = lt
+                reportData[6] = rx
+                reportData[7] = ry
                 reportData[8] = rt
                 
                 reportExecutor.execute {
