@@ -14,24 +14,29 @@ class HidManager(val context: Context) {
     private var connectedDevice: BluetoothDevice? = null
     private lateinit var hidCallback: BluetoothHidDevice.Callback
 
-    fun initialize(callback: BluetoothHidDevice.Callback) {
+    private var sdpSettings: BluetoothHidDeviceAppSdpSettings? = null
+
+    fun initialize(sdp: BluetoothHidDeviceAppSdpSettings, callback: BluetoothHidDevice.Callback) {
         hidCallback = callback
+        sdpSettings = sdp
         val adapter = BluetoothAdapter.getDefaultAdapter()
         adapter.getProfileProxy(context, object : BluetoothProfile.ServiceListener {
             override fun onServiceConnected(profile: Int, proxy: BluetoothProfile) {
                 if (profile == BluetoothProfile.HID_DEVICE) {
                     hidDevice = proxy as BluetoothHidDevice
-                    // Do NOT register here yet. Wait for button trigger.
+                    // Auto-register SDP when proxy is connected
+                    hidDevice?.registerApp(sdpSettings, null, null, Executors.newSingleThreadExecutor(), baseHidCallback)
                 }
             }
-            override fun onServiceDisconnected(profile: Int) {}
+            override fun onServiceDisconnected(profile: Int) {
+                if (profile == BluetoothProfile.HID_DEVICE) {
+                    hidDevice = null
+                }
+            }
         }, BluetoothProfile.HID_DEVICE)
     }
 
-    fun startDiscovery(sdp: BluetoothHidDeviceAppSdpSettings) {
-        // This is the manual trigger
-        hidDevice?.registerApp(sdp, null, null, Executors.newSingleThreadExecutor(), baseHidCallback)
-
+    fun startDiscovery() {
         // Make discoverable for 60 seconds
         val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

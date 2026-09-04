@@ -205,8 +205,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         btnClipboard = findViewById(R.id.btnClipboard)
         btnSpecialKeys = findViewById(R.id.btnSpecialKeys)
 
+        val sdpSettings = BluetoothHidDeviceAppSdpSettings(
+            "Android Trackpad",
+            "A virtual mouse and keyboard for your computer",
+            "Example Inc.",
+            0xC0.toByte(), // pc ko bata raha hai ki hum dono hain mouse bhi keyboard bhi
+            HidUtils.COMPOSITE_HID_DESCRIPTOR
+        )
+
         hidManager = HidManager(this)
-        hidManager.initialize(object : BluetoothHidDevice.Callback() {
+        hidManager.initialize(sdpSettings, object : BluetoothHidDevice.Callback() {
             override fun onConnectionStateChanged(device: BluetoothDevice?, state: Int) {
                 super.onConnectionStateChanged(device, state)
                 runOnUiThread {
@@ -215,6 +223,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         hidDevice = hidManager.getHidDevice()
                         tvStatus.text = "Connected"
                         broadcastTimeoutRunnable?.let { handler.removeCallbacks(it) }
+                        
+                        // Save last connected device MAC
+                        device?.address?.let { mac ->
+                            getSharedPreferences("BluetoothApp", android.content.Context.MODE_PRIVATE)
+                                .edit()
+                                .putString("last_device_mac", mac)
+                                .apply()
+                        }
                     } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
                         hostDevice = null
                         tvStatus.text = "Disconnected"
@@ -550,14 +566,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun startDiscovery() {
-        val sdpSettings = BluetoothHidDeviceAppSdpSettings(
-            "Android Trackpad",
-            "A virtual mouse and keyboard for your computer",
-            "Example Inc.",
-            0xC0.toByte(), // ye pc ko bata raha hai ki hum dono hain mouse bhi keyboard bhi
-            HidUtils.COMPOSITE_HID_DESCRIPTOR
-        )
-        hidManager.startDiscovery(sdpSettings)
+        hidManager.startDiscovery()
         tvStatus.text = "Broadcasting (60s)"
 
         broadcastTimeoutRunnable?.let { handler.removeCallbacks(it) }
