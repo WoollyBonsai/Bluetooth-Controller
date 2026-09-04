@@ -224,41 +224,43 @@ class GamepadView @JvmOverloads constructor(
 
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
-                // Check Joysticks
-                if (dist(x, y, leftStickCenter.x, leftStickCenter.y) < stickRadius) {
-                    activePointers[pointerId] = "L_STICK"
-                    leftStickAnchor.set(x, y)
-                    updateStick(x, y, true)
-                    stateChanged = true
-                } else if (dist(x, y, rightStickCenter.x, rightStickCenter.y) < stickRadius) {
-                    activePointers[pointerId] = "R_STICK"
-                    rightStickAnchor.set(x, y)
-                    updateStick(x, y, false)
-                    stateChanged = true
-                } 
+                var handled = false
+                // Check Buttons
+                for ((name, rect) in btns) {
+                    val hit = RectF(rect.left - 30, rect.top - 30, rect.right + 30, rect.bottom + 30) // even larger hitbox
+                    if (hit.contains(x, y)) {
+                        activePointers[pointerId] = name
+                        if (name == "LT") {
+                            leftTrigger = 255.toByte()
+                        } else if (name == "RT") {
+                            rightTrigger = 255.toByte()
+                        } else {
+                            buttonsMask = (buttonsMask.toInt() or btnMasks[name]!!).toShort()
+                        }
+                        stateChanged = true
+                        handled = true
+                        break
+                    }
+                }
                 // Check D-Pad
-                else if (dist(x, y, dpadCenter.x, dpadCenter.y) < dpadRadius) {
+                if (!handled && dist(x, y, dpadCenter.x, dpadCenter.y) < dpadRadius) {
                     activePointers[pointerId] = "DPAD"
                     updateDpad(x, y)
                     stateChanged = true
+                    handled = true
                 }
-                // Check Buttons
-                else {
-                    for ((name, rect) in btns) {
-                        // Expanded hitboxes for easier touch
-                        val hit = RectF(rect.left - 20, rect.top - 20, rect.right + 20, rect.bottom + 20)
-                        if (hit.contains(x, y)) {
-                            activePointers[pointerId] = name
-                            if (name == "LT") {
-                                leftTrigger = 255.toByte()
-                            } else if (name == "RT") {
-                                rightTrigger = 255.toByte()
-                            } else {
-                                buttonsMask = (buttonsMask.toInt() or btnMasks[name]!!).toShort()
-                            }
-                            stateChanged = true
-                            break
-                        }
+                // Check floating joysticks (split screen)
+                if (!handled) {
+                    if (x < width / 2) {
+                        activePointers[pointerId] = "L_STICK"
+                        leftStickAnchor.set(x, y)
+                        updateStick(x, y, true)
+                        stateChanged = true
+                    } else {
+                        activePointers[pointerId] = "R_STICK"
+                        rightStickAnchor.set(x, y)
+                        updateStick(x, y, false)
+                        stateChanged = true
                     }
                 }
             }
