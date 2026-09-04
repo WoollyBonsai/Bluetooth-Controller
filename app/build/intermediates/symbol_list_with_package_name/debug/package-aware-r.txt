@@ -3201,6 +3201,7 @@ id btnCreateLayout
 id btnDisplayMode
 id btnEsc
 id btnF5
+id btnFullscreen
 id btnInit
 id btnLeftClick1
 id btnLeftClick2

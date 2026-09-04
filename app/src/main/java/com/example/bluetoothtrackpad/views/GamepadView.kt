@@ -53,11 +53,13 @@ class GamepadView @JvmOverloads constructor(
     // Rects & Centers
     private var leftStickCenter = PointF()
     private var leftStickCurrent = PointF()
+    private var leftStickAnchor = PointF()
     private var stickRadius = 0f
     private var thumbRadius = 0f
 
     private var rightStickCenter = PointF()
     private var rightStickCurrent = PointF()
+    private var rightStickAnchor = PointF()
 
     private var dpadCenter = PointF()
     private var dpadRadius = 0f
@@ -225,10 +227,12 @@ class GamepadView @JvmOverloads constructor(
                 // Check Joysticks
                 if (dist(x, y, leftStickCenter.x, leftStickCenter.y) < stickRadius) {
                     activePointers[pointerId] = "L_STICK"
+                    leftStickAnchor.set(x, y)
                     updateStick(x, y, true)
                     stateChanged = true
                 } else if (dist(x, y, rightStickCenter.x, rightStickCenter.y) < stickRadius) {
                     activePointers[pointerId] = "R_STICK"
+                    rightStickAnchor.set(x, y)
                     updateStick(x, y, false)
                     stateChanged = true
                 } 
@@ -280,10 +284,12 @@ class GamepadView @JvmOverloads constructor(
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
                 val target = activePointers.remove(pointerId)
                 if (target == "L_STICK") {
+                    leftStickAnchor.set(leftStickCenter)
                     leftStickCurrent.set(leftStickCenter)
                     leftStickX = 128.toByte(); leftStickY = 128.toByte()
                     stateChanged = true
                 } else if (target == "R_STICK") {
+                    rightStickAnchor.set(rightStickCenter)
                     rightStickCurrent.set(rightStickCenter)
                     rightStickX = 128.toByte(); rightStickY = 128.toByte()
                     stateChanged = true
@@ -311,29 +317,29 @@ class GamepadView @JvmOverloads constructor(
     }
 
     private fun updateStick(px: Float, py: Float, isLeft: Boolean) {
-        val center = if (isLeft) leftStickCenter else rightStickCenter
+        val anchor = if (isLeft) leftStickAnchor else rightStickAnchor
         val current = if (isLeft) leftStickCurrent else rightStickCurrent
         
-        val dx = px - center.x
-        val dy = py - center.y
+        val dx = px - anchor.x
+        val dy = py - anchor.y
         val dist = sqrt(dx * dx + dy * dy)
         val deadzone = stickRadius * 0.1f // 10% deadzone for hall-effect feel
         
         if (dist < deadzone) {
-            current.x = center.x
-            current.y = center.y
+            current.x = anchor.x
+            current.y = anchor.y
         } else if (dist > stickRadius) {
             val angle = atan2(dy, dx)
-            current.x = center.x + cos(angle) * stickRadius
-            current.y = center.y + sin(angle) * stickRadius
+            current.x = anchor.x + cos(angle) * stickRadius
+            current.y = anchor.y + sin(angle) * stickRadius
         } else {
             current.x = px
             current.y = py
         }
 
         // Smooth curve mapping to 0-255 outside deadzone
-        val mappedX = if (dist < deadzone) 128 else ((current.x - center.x) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
-        val mappedY = if (dist < deadzone) 128 else ((current.y - center.y) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
+        val mappedX = if (dist < deadzone) 128 else ((current.x - anchor.x) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
+        val mappedY = if (dist < deadzone) 128 else ((current.y - anchor.y) / stickRadius * 127 + 128).toInt().coerceIn(0, 255)
         
         if (isLeft) {
             leftStickX = mappedX.toByte()
