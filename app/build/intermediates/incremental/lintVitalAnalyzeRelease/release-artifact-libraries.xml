@@ -328,6 +328,10 @@
       jars="/home/woolly/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.9.0/e000bd084353d84c9e888f6fb341dc1f5b79d948/kotlin-stdlib-jdk8-1.9.0.jar"
       resolved="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"/>
   <library
+      name="com.google.code.gson:gson:2.10.1@jar"
+      jars="/home/woolly/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar"
+      resolved="com.google.code.gson:gson:2.10.1"/>
+  <library
       name="androidx.constraintlayout:constraintlayout:2.1.4@aar"
       jars="/home/woolly/.gradle/caches/transforms-3/9edabc8f42025011ae47eac4fec80b9b/transformed/constraintlayout-2.1.4/jars/classes.jar"
       resolved="androidx.constraintlayout:constraintlayout:2.1.4"

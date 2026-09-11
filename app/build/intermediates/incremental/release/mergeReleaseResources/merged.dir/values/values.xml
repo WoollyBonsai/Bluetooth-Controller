@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="http://schemas.android.com/tools" xmlns:ns2="urn:oasis:names:tc:xliff:document:1.2">
+    <string-array name="mode_array">
+        <item>1. Trackpad Only</item>
+        <item>2. Trackpad + Keyboard</item>
+        <item>3. Thinkpad Style</item>
+        <item>4. Multimedia Mode</item>
+        <item>5. Presentation Mode</item>
+        <item>6. Xbox Controller Mode</item>
+    </string-array>
     <attr format="enum" name="animateCircleAngleTo">
         <enum name="bestChoice" value="0"/>
         <enum name="closest" value="1"/>

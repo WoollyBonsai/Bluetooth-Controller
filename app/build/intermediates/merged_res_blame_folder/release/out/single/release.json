@@ -8,11 +8,19 @@
         "source": "com.example.bluetoothtrackpad.app-main-32:/xml/backup_rules.xml"
     },
     {
+        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/drawable_trackpoint_bg.xml.flat",
+        "source": "com.example.bluetoothtrackpad.app-main-32:/drawable/trackpoint_bg.xml"
+    },
+    {
         "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_main.xml.flat",
         "source": "com.example.bluetoothtrackpad.app-main-32:/layout/activity_main.xml"
     },
     {
         "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/xml_data_extraction_rules.xml.flat",
         "source": "com.example.bluetoothtrackpad.app-main-32:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.bluetoothtrackpad.app-merged_res-31:/layout_activity_settings.xml.flat",
+        "source": "com.example.bluetoothtrackpad.app-main-32:/layout/activity_settings.xml"
     }
 ]

@@ -270,7 +270,7 @@ ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/
 		ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
-permission#com.example.bluetoothtrackpad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.example.bluetoothtrackpad.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
@@ -280,7 +280,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
-uses-permission#com.example.bluetoothtrackpad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.example.bluetoothtrackpad.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /home/woolly/.gradle/caches/transforms-3/27729d10b71830fb9e6411d932a56a41/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
