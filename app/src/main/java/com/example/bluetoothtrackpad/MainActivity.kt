@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var gyroSensor: Sensor? = null
+    private var gyroAccumDx = 0f
+    private var gyroAccumDy = 0f
     private var currentLayoutIndex = 0
     private var customLayouts = mutableListOf<com.example.bluetoothtrackpad.models.CustomLayout>()
 
@@ -765,6 +767,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
         
+        // Update Trackpad button position
+        val trackpadLayout = findViewById<LinearLayout>(R.id.layoutTrackpadOnly)
+        val buttonsContainer = findViewById<LinearLayout>(R.id.trackpadButtonsContainer1)
+        if (trackpadLayout != null && buttonsContainer != null) {
+            val btnPos = SettingsManager.getTrackpadButtonPosition(this)
+            trackpadLayout.removeView(buttonsContainer)
+            if (btnPos == "Top") {
+                trackpadLayout.addView(buttonsContainer, 0)
+            } else {
+                trackpadLayout.addView(buttonsContainer) // adds to the end
+            }
+        }
+        
         // Refresh Spinner
         customLayouts = LayoutManager.getLayouts(this)
         val defaultOptions = resources.getStringArray(R.array.mode_array).toList()
@@ -809,15 +824,28 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         
         // Portrait vs Landscape gyro axes
         if (currentLayoutIndex == 5) { // Gamepad is Landscape
-            dx = -event.values[0] * mult // Pitch
-            dy = -event.values[1] * mult // Roll
+            dx = -event.values[0] * mult * 3f // Pitch
+            dy = -event.values[1] * mult * 3f // Roll
         } else {
-            dx = -event.values[1] * mult // Roll
-            dy = event.values[0] * mult // Pitch
+            dx = -event.values[1] * mult * 3f // Roll
+            dy = event.values[0] * mult * 3f // Pitch
         }
+        
+        // Eliminate sensor noise to prevent drift when still
+        if (Math.abs(dx) < 0.2f) dx = 0f
+        if (Math.abs(dy) < 0.2f) dy = 0f
+        
+        // Accumulate fractional pixels to allow smooth slow movements
+        gyroAccumDx += dx
+        gyroAccumDy += dy
+        
+        val sendDx = gyroAccumDx.toInt()
+        val sendDy = gyroAccumDy.toInt()
 
-        if (Math.abs(dx) > 1f || Math.abs(dy) > 1f) {
-            sendMouseReport(dx.toInt(), dy.toInt(), 0, null)
+        if (sendDx != 0 || sendDy != 0) {
+            gyroAccumDx -= sendDx
+            gyroAccumDy -= sendDy
+            sendMouseReport(sendDx, sendDy, 0, null)
         }
     }
 

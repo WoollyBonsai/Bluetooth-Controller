@@ -25,4 +25,13 @@ object SettingsManager {
     fun setSensitivity(context: Context, layoutIndex: Int, sensitivity: Int) {
         getPrefs(context).edit().putInt("sensitivity_$layoutIndex", sensitivity).apply()
     }
+
+
+    fun getTrackpadButtonPosition(context: Context): String {
+        return getPrefs(context).getString("trackpad_btn_pos", "Bottom") ?: "Bottom"
+    }
+
+    fun setTrackpadButtonPosition(context: Context, position: String) {
+        getPrefs(context).edit().putString("trackpad_btn_pos", position).apply()
+    }
 }

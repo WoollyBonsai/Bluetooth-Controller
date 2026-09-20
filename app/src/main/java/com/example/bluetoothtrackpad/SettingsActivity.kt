@@ -8,6 +8,10 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.AdapterView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
@@ -17,9 +21,23 @@ class SettingsActivity : AppCompatActivity() {
         
         val switchGyro = findViewById<Switch>(R.id.switchGyro)
         val seekSensitivity = findViewById<SeekBar>(R.id.seekSensitivity)
+        val spinnerBtnPos = findViewById<Spinner>(R.id.spinnerTrackpadBtnPos)
 
         switchGyro.isChecked = SettingsManager.isGyroEnabled(this, -1) // -1 for default layouts
         seekSensitivity.progress = SettingsManager.getSensitivity(this, -1)
+
+        val btnPosOptions = arrayOf("Top", "Bottom")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, btnPosOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerBtnPos.adapter = adapter
+        spinnerBtnPos.setSelection(btnPosOptions.indexOf(SettingsManager.getTrackpadButtonPosition(this)))
+
+        spinnerBtnPos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                SettingsManager.setTrackpadButtonPosition(this@SettingsActivity, btnPosOptions[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         switchGyro.setOnCheckedChangeListener { _, isChecked -> SettingsManager.setGyroEnabled(this, -1, isChecked) }
         seekSensitivity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
