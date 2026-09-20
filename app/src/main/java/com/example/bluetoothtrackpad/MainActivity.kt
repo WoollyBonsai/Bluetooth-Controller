@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             HidUtils.COMPOSITE_HID_DESCRIPTOR
         )
 
-        hidManager = HidManager(this)
+        hidManager = HidManager.getInstance(this)
         hidManager.initialize(sdpSettings, object : BluetoothHidDevice.Callback() {
             override fun onConnectionStateChanged(device: BluetoothDevice?, state: Int) {
                 super.onConnectionStateChanged(device, state)
@@ -329,7 +329,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 if (currentHid != null) {
                     try {
                         tvStatus.text = "Connecting..."
-                        currentHid.connect(device)
+                        val success = currentHid.connect(device)
+                        if (!success) {
+                            Toast.makeText(this, "Failed. Try connecting from PC or Android Bluetooth Settings.", Toast.LENGTH_LONG).show()
+                        }
+                    } catch (e: SecurityException) {
+                        Toast.makeText(this, "Android restricts this. Connect from PC or Android Bluetooth Settings instead.", Toast.LENGTH_LONG).show()
                     } catch (e: Exception) {
                         Toast.makeText(this, "Failed to connect: ${e.message}", Toast.LENGTH_SHORT).show()
                     }

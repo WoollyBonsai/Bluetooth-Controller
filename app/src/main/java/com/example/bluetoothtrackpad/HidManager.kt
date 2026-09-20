@@ -9,16 +9,38 @@ import android.content.Context
 import android.content.Intent
 import java.util.concurrent.Executors
 
-class HidManager(val context: Context) {
+class HidManager private constructor(val context: Context) {
+    companion object {
+        @Volatile private var instance: HidManager? = null
+        
+        fun getInstance(context: Context): HidManager {
+            return instance ?: synchronized(this) {
+                instance ?: HidManager(context.applicationContext).also { instance = it }
+            }
+        }
+    }
+
     private var hidDevice: BluetoothHidDevice? = null
     private var connectedDevice: BluetoothDevice? = null
     private lateinit var hidCallback: BluetoothHidDevice.Callback
 
     private var sdpSettings: BluetoothHidDeviceAppSdpSettings? = null
 
+        var isInitialized = false
+
     fun initialize(sdp: BluetoothHidDeviceAppSdpSettings, callback: BluetoothHidDevice.Callback) {
         hidCallback = callback
         sdpSettings = sdp
+        
+        if (isInitialized) {
+            // Already connected/registered, just update the callback and notify it of the current state
+            if (connectedDevice != null) {
+                hidCallback.onConnectionStateChanged(connectedDevice, BluetoothProfile.STATE_CONNECTED)
+            }
+            return
+        }
+        
+        isInitialized = true
         val adapter = BluetoothAdapter.getDefaultAdapter()
         adapter.getProfileProxy(context, object : BluetoothProfile.ServiceListener {
             override fun onServiceConnected(profile: Int, proxy: BluetoothProfile) {
@@ -31,6 +53,7 @@ class HidManager(val context: Context) {
             override fun onServiceDisconnected(profile: Int) {
                 if (profile == BluetoothProfile.HID_DEVICE) {
                     hidDevice = null
+                    isInitialized = false
                 }
             }
         }, BluetoothProfile.HID_DEVICE)
