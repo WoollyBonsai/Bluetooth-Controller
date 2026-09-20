@@ -1,5 +1,6 @@
 package com.example.bluetoothtrackpad
 
+import android.content.Intent
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -247,6 +248,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             HidUtils.COMPOSITE_HID_DESCRIPTOR
         )
 
+                val serviceIntent = Intent(this, HidService::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+        
         hidManager = HidManager.getInstance(this)
         hidManager.initialize(sdpSettings, object : BluetoothHidDevice.Callback() {
             override fun onConnectionStateChanged(device: BluetoothDevice?, state: Int) {
@@ -824,11 +832,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         
         // Portrait vs Landscape gyro axes
         if (currentLayoutIndex == 5) { // Gamepad is Landscape
-            dx = -event.values[0] * mult * 3f // Pitch
-            dy = -event.values[1] * mult * 3f // Roll
+            dx = -event.values[0] * mult * 20f // Pitch
+            dy = -event.values[1] * mult * 20f // Roll
         } else {
-            dx = -event.values[1] * mult * 3f // Roll
-            dy = event.values[0] * mult * 3f // Pitch
+            dx = -event.values[1] * mult * 20f // Roll
+            dy = event.values[0] * mult * 20f // Pitch
         }
         
         // Eliminate sensor noise to prevent drift when still
