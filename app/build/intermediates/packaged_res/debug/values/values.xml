@@ -7,6 +7,7 @@
         <item>4. Multimedia Mode</item>
         <item>5. Presentation Mode</item>
         <item>6. Xbox Controller Mode</item>
+        <item>7. X-Input Controller</item>
     </string-array>
     <string name="app_name">Bluetooth Trackpad</string>
     <style name="Theme.BluetoothTrackpad" parent="Theme.AppCompat.DayNight.NoActionBar">
