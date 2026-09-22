@@ -217,19 +217,53 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         gamepadView.listener = object : com.example.bluetoothtrackpad.views.GamepadView.Listener {
             override fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, lt: Byte, rx: Byte, ry: Byte, rt: Byte) {
                 if (hostDevice == null) return
-                val reportData = ByteArray(9)
-                reportData[0] = (buttons.toInt() and 0xFF).toByte()
-                reportData[1] = ((buttons.toInt() shr 8) and 0xFF).toByte()
-                reportData[2] = dpad
-                reportData[3] = lx
-                reportData[4] = ly
-                reportData[5] = lt
-                reportData[6] = rt
-                reportData[7] = rx
-                reportData[8] = ry
                 
-                reportExecutor.execute {
-                    hidDevice?.sendReport(hostDevice, HidUtils.GAMEPAD_REPORT_ID.toInt(), reportData)
+                if (currentLayoutIndex == 6) { // X-Input
+                    val lx16 = (lx.toInt() and 0xFF) * 257
+                    val ly16 = (ly.toInt() and 0xFF) * 257
+                    val rx16 = (rx.toInt() and 0xFF) * 257
+                    val ry16 = (ry.toInt() and 0xFF) * 257
+                    
+                    val lt10 = (lt.toInt() and 0xFF) * 4
+                    val rt10 = (rt.toInt() and 0xFF) * 4
+                    
+                    val b = buttons.toInt()
+                    val btnA = (b and 1) != 0
+                    val btnB = (b and 2) != 0
+                    val btnY = (b and 8) != 0
+                    val btnX = (b and 16) != 0
+                    val btnLB = (b and 64) != 0
+                    val btnRB = (b and 128) != 0
+                    val btnSelect = (b and 1024) != 0
+                    val btnStart = (b and 2048) != 0
+                    val btnGuide = (b and 4096) != 0
+                    val btnL3 = (b and 8192) != 0
+                    val btnR3 = (b and 16384) != 0
+
+                    reportExecutor.execute {
+                        sendXInputGamepadReport(
+                            lx = lx16, ly = ly16, rx = rx16, ry = ry16,
+                            l2 = lt10, r2 = rt10, hat = dpad.toInt() and 0x0F,
+                            btnA = btnA, btnB = btnB, btnX = btnX, btnY = btnY,
+                            btnLB = btnLB, btnRB = btnRB, btnView = btnSelect, btnMenu = btnStart,
+                            btnL3 = btnL3, btnR3 = btnR3, btnGuide = btnGuide
+                        )
+                    }
+                } else {
+                    val reportData = ByteArray(9)
+                    reportData[0] = (buttons.toInt() and 0xFF).toByte()
+                    reportData[1] = ((buttons.toInt() shr 8) and 0xFF).toByte()
+                    reportData[2] = dpad
+                    reportData[3] = lx
+                    reportData[4] = ly
+                    reportData[5] = lt
+                    reportData[6] = rt
+                    reportData[7] = rx
+                    reportData[8] = ry
+                    
+                    reportExecutor.execute {
+                        hidDevice?.sendReport(hostDevice, HidUtils.GAMEPAD_REPORT_ID.toInt(), reportData)
+                    }
                 }
             }
         }
@@ -359,20 +393,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun switchLayout(index: Int) {
         currentLayoutIndex = index
         
-        if (index < 6) {
-            for (i in 0 until 6) {
+        if (index < 7) {
+            for (i in 0 until 5) {
                 layouts[i].visibility = if (i == index) View.VISIBLE else View.GONE
             }
+            layoutGamepad.visibility = if (index == 5 || index == 6 || index == 6) View.VISIBLE else View.GONE
             layoutCustom.visibility = View.GONE
         } else {
-            for (i in 0 until 6) {
+            for (i in 0 until 5) {
                 layouts[i].visibility = View.GONE
             }
+            layoutGamepad.visibility = View.GONE
             layoutCustom.visibility = View.VISIBLE
             
             // Render custom layout dynamically
             layoutCustom.removeAllViews()
-            val customIdx = index - 6
+            val customIdx = index - 7
             if (customIdx < customLayouts.size) {
                 val conf = customLayouts[customIdx]
                 val renderer = com.example.bluetoothtrackpad.views.CustomLayoutRenderer(this, conf, object : com.example.bluetoothtrackpad.views.CustomLayoutRenderer.Listener {
@@ -392,7 +428,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
         
         // Force Landscape for Gamepad (mode index 5)
-        if (index == 5) {
+        if (index == 5 || index == 6) {
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         } else {
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -831,7 +867,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         var dy = 0f
         
         // Portrait vs Landscape gyro axes
-        if (currentLayoutIndex == 5) { // Gamepad is Landscape
+        if (currentLayoutIndex == 5 || currentLayoutIndex == 6) { // Gamepad is Landscape
             dx = -event.values[0] * mult * 20f // Pitch
             dy = -event.values[1] * mult * 20f // Roll
         } else {
@@ -863,5 +899,50 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onDestroy()
         reportExecutor.shutdown()
         broadcastTimeoutRunnable?.let { handler.removeCallbacks(it) }
+    }
+    private fun sendXInputGamepadReport(
+        lx: Int = 32768, ly: Int = 32768, rx: Int = 32768, ry: Int = 32768,
+        l2: Int = 0, r2: Int = 0, hat: Int = 0,
+        btnA: Boolean = false, btnB: Boolean = false, btnX: Boolean = false, btnY: Boolean = false,
+        btnLB: Boolean = false, btnRB: Boolean = false, btnView: Boolean = false, btnMenu: Boolean = false,
+        btnL3: Boolean = false, btnR3: Boolean = false, btnGuide: Boolean = false
+    ) {
+        if (hostDevice == null) return
+        val report = ByteArray(15)
+        report[0] = (lx and 0xFF).toByte()
+        report[1] = ((lx shr 8) and 0xFF).toByte()
+        report[2] = (ly and 0xFF).toByte()
+        report[3] = ((ly shr 8) and 0xFF).toByte()
+        report[4] = (rx and 0xFF).toByte()
+        report[5] = ((rx shr 8) and 0xFF).toByte()
+        report[6] = (ry and 0xFF).toByte()
+        report[7] = ((ry shr 8) and 0xFF).toByte()
+        report[8] = (l2 and 0xFF).toByte()
+        report[9] = ((l2 shr 8) and 0x03).toByte()
+        report[10] = (r2 and 0xFF).toByte()
+        report[11] = ((r2 shr 8) and 0x03).toByte()
+        report[12] = (hat and 0x0F).toByte()
+        var b1 = 0
+        if (btnA) b1 = b1 or 1
+        if (btnB) b1 = b1 or 2
+        if (btnX) b1 = b1 or 4
+        if (btnY) b1 = b1 or 8
+        if (btnLB) b1 = b1 or 16
+        if (btnRB) b1 = b1 or 32
+        if (btnView) b1 = b1 or 64
+        if (btnMenu) b1 = b1 or 128
+        report[13] = b1.toByte()
+        var b2 = 0
+        if (btnL3) b2 = b2 or 1
+        if (btnR3) b2 = b2 or 2
+        report[14] = b2.toByte()
+        try {
+            hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_REPORT_ID.toInt(), report)
+            val guideReport = ByteArray(1)
+            guideReport[0] = if (btnGuide) 1 else 0
+            hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_GUIDE_REPORT_ID.toInt(), guideReport)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

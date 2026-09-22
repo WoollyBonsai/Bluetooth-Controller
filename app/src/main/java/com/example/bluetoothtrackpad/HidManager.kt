@@ -68,6 +68,10 @@ class HidManager private constructor(val context: Context) {
         context.startActivity(intent)
     }
 
+    fun getConnectedDevice(): BluetoothDevice? {
+        return connectedDevice
+    }
+
     fun getHidDevice(): BluetoothHidDevice? {
         return hidDevice
     }
