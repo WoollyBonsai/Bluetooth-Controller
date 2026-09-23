@@ -43,12 +43,14 @@ id layoutTrackpadKeyboard
 id layoutTrackpadOnly
 id seekSensitivity
 id spinnerMode
+id spinnerTrackpadBtnPos
 id switchGyro
 id topBar
 id touchArea1
 id touchArea2
 id touchArea3
 id touchAreaPresentation
+id trackpadButtonsContainer1
 id tvStatus
 layout activity_main
 layout activity_settings

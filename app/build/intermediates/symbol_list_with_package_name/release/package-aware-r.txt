@@ -3542,6 +3542,7 @@ id south
 id spacer
 id special_effects_controller_view_tag
 id spinnerMode
+id spinnerTrackpadBtnPos
 id spline
 id split_action_bar
 id spread
@@ -3607,6 +3608,7 @@ id touchArea2
 id touchArea3
 id touchAreaPresentation
 id touch_outside
+id trackpadButtonsContainer1
 id transitionToEnd
 id transitionToStart
 id transition_clip

@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             override fun onGamepadReport(buttons: Short, dpad: Byte, lx: Byte, ly: Byte, lt: Byte, rx: Byte, ry: Byte, rt: Byte) {
                 if (hostDevice == null) return
                 
-                if (currentLayoutIndex == 6 || currentLayoutIndex == 7) { // X-Input
+                if (currentLayoutIndex >= 5) { // Gamepads
                     val lx16 = (lx.toInt() and 0xFF) * 257
                     val ly16 = (ly.toInt() and 0xFF) * 257
                     val rx16 = (rx.toInt() and 0xFF) * 257
@@ -668,7 +668,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun startDiscovery() {
         hidManager.startDiscovery()
-        tvStatus.text = "Broadcasting (60s)"
+        tvStatus.text = "Broadcasting (360s)"
 
         broadcastTimeoutRunnable?.let { handler.removeCallbacks(it) }
         broadcastTimeoutRunnable = Runnable {
