@@ -60,30 +60,13 @@ class HidManager private constructor(val context: Context) {
     }
 
     fun startDiscovery() {
-        // Toggle Bluetooth
-        val adapter = BluetoothAdapter.getDefaultAdapter()
-        try {
-            if (adapter.isEnabled) {
-                adapter.disable()
-            }
-        } catch(e: Exception) {}
-
-        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            try {
-                if (!adapter.isEnabled) {
-                    adapter.enable()
-                }
-            } catch(e: Exception) {}
-
-            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 360)
-                }
-                context.startActivity(intent)
-            }, 1000)
-        }, 3000)
+        val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 360)
+        }
+        context.startActivity(intent)
     }
+
 
     fun getConnectedDevice(): BluetoothDevice? {
         return connectedDevice

@@ -245,10 +245,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     if (btnR3) mask = mask or (1 shl 9)
                     if (btnGuide) mask = mask or (1 shl 10)
 
+                    var hatVal = 8
+                    val up = (dpad.toInt() and 1) != 0
+                    val down = (dpad.toInt() and 2) != 0
+                    val left = (dpad.toInt() and 4) != 0
+                    val right = (dpad.toInt() and 8) != 0
+                    if (up && right) hatVal = 1
+                    else if (down && right) hatVal = 3
+                    else if (down && left) hatVal = 5
+                    else if (up && left) hatVal = 7
+                    else if (up) hatVal = 0
+                    else if (right) hatVal = 2
+                    else if (down) hatVal = 4
+                    else if (left) hatVal = 6
+
                     val reportData = ByteArray(9)
                     reportData[0] = (mask and 0xFF).toByte()
                     reportData[1] = ((mask shr 8) and 0xFF).toByte()
-                    reportData[2] = dpad
+                    reportData[2] = hatVal.toByte()
                     reportData[3] = lx
                     reportData[4] = ly
                     reportData[5] = lt
@@ -260,10 +274,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_REPORT_ID.toInt(), reportData)
                     }
                 } else {
+                    var hatVal = 8
+                    val up = (dpad.toInt() and 1) != 0
+                    val down = (dpad.toInt() and 2) != 0
+                    val left = (dpad.toInt() and 4) != 0
+                    val right = (dpad.toInt() and 8) != 0
+                    if (up && right) hatVal = 1
+                    else if (down && right) hatVal = 3
+                    else if (down && left) hatVal = 5
+                    else if (up && left) hatVal = 7
+                    else if (up) hatVal = 0
+                    else if (right) hatVal = 2
+                    else if (down) hatVal = 4
+                    else if (left) hatVal = 6
+
                     val reportData = ByteArray(9)
                     reportData[0] = (buttons.toInt() and 0xFF).toByte()
                     reportData[1] = ((buttons.toInt() shr 8) and 0xFF).toByte()
-                    reportData[2] = dpad
+                    reportData[2] = hatVal.toByte()
                     reportData[3] = lx
                     reportData[4] = ly
                     reportData[5] = lt
@@ -272,7 +300,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     reportData[8] = ry
                     
                     reportExecutor.execute {
-                        hidDevice?.sendReport(hostDevice, HidUtils.GAMEPAD_REPORT_ID.toInt(), reportData)
+                        hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_REPORT_ID.toInt(), reportData)
                     }
                 }
             }
