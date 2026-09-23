@@ -219,19 +219,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 if (hostDevice == null) return
                 
                 if (currentLayoutIndex >= 5) { // Gamepads
-                    val lx16 = (lx.toInt() and 0xFF) * 257
-                    val ly16 = (ly.toInt() and 0xFF) * 257
-                    val rx16 = (rx.toInt() and 0xFF) * 257
-                    val ry16 = (ry.toInt() and 0xFF) * 257
-                    
-                    val lt10 = (lt.toInt() and 0xFF) * 4
-                    val rt10 = (rt.toInt() and 0xFF) * 4
-                    
                     val b = buttons.toInt()
                     val btnA = (b and 1) != 0
                     val btnB = (b and 2) != 0
-                    val btnY = (b and 8) != 0
                     val btnX = (b and 16) != 0
+                    val btnY = (b and 8) != 0
                     val btnLB = (b and 64) != 0
                     val btnRB = (b and 128) != 0
                     val btnSelect = (b and 1024) != 0
@@ -240,14 +232,32 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val btnL3 = (b and 8192) != 0
                     val btnR3 = (b and 16384) != 0
 
+                    var mask = 0
+                    if (btnA) mask = mask or (1 shl 0)
+                    if (btnB) mask = mask or (1 shl 1)
+                    if (btnX) mask = mask or (1 shl 2)
+                    if (btnY) mask = mask or (1 shl 3)
+                    if (btnLB) mask = mask or (1 shl 4)
+                    if (btnRB) mask = mask or (1 shl 5)
+                    if (btnSelect) mask = mask or (1 shl 6)
+                    if (btnStart) mask = mask or (1 shl 7)
+                    if (btnL3) mask = mask or (1 shl 8)
+                    if (btnR3) mask = mask or (1 shl 9)
+                    if (btnGuide) mask = mask or (1 shl 10)
+
+                    val reportData = ByteArray(9)
+                    reportData[0] = (mask and 0xFF).toByte()
+                    reportData[1] = ((mask shr 8) and 0xFF).toByte()
+                    reportData[2] = dpad
+                    reportData[3] = lx
+                    reportData[4] = ly
+                    reportData[5] = lt
+                    reportData[6] = rt
+                    reportData[7] = rx
+                    reportData[8] = ry
+
                     reportExecutor.execute {
-                        sendXInputGamepadReport(
-                            lx = lx16, ly = ly16, rx = rx16, ry = ry16,
-                            l2 = lt10, r2 = rt10, hat = dpad.toInt() and 0x0F,
-                            btnA = btnA, btnB = btnB, btnX = btnX, btnY = btnY,
-                            btnLB = btnLB, btnRB = btnRB, btnView = btnSelect, btnMenu = btnStart,
-                            btnL3 = btnL3, btnR3 = btnR3, btnGuide = btnGuide
-                        )
+                        hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_REPORT_ID.toInt(), reportData)
                     }
                 } else {
                     val reportData = ByteArray(9)
@@ -938,9 +948,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         report[14] = b2.toByte()
         try {
             hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_REPORT_ID.toInt(), report)
-            val guideReport = ByteArray(1)
-            guideReport[0] = if (btnGuide) 1 else 0
-            hidDevice?.sendReport(hostDevice, HidUtils.XINPUT_GUIDE_REPORT_ID.toInt(), guideReport)
+            
         } catch (e: Exception) {
             e.printStackTrace()
         }
